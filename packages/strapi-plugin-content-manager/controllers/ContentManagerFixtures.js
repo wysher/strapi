@@ -1,3 +1,6 @@
+const pluralize = require('pluralize');
+const { upperFirst } = require('lodash');
+
 module.exports = {
   getGeneralSettings: ctx => {
     const generalSettings = {
@@ -24,209 +27,34 @@ module.exports = {
 
   getLayout: ctx => {
     const layouts = {
-      tag: {
-        uid: 'article',
-        schema: {
-          // good old schema
-          connection: 'default',
-          collectionName: 'articles',
-          options: {},
-          infos: {
-            name: 'article',
-            description: '',
-          },
-          attributes: {
-            title: {
-              type: 'string',
-            },
-            content: {
-              type: 'text',
-            },
-            json: {
-              type: 'string',
-            },
-            number: {
-              type: 'integer',
-            },
-            date: {
-              type: 'date',
-            },
-            enum: {
-              enum: ['morning,', 'noon'],
-              type: 'enumeration',
-            },
-            pic: {
-              model: 'file',
-              via: 'related',
-              plugin: 'upload',
-            },
-            bool: {
-              type: 'boolean',
-            },
-            tags: {
-              collection: 'tag',
-              via: 'articles',
-            },
-          },
-        },
-        settings: {
-          mainField: 'id',
-          defaultSortBy: 'id',
-          defaultSortOrder: 'ASC',
-          searchable: true,
-          filterable: false,
-          bulkable: true,
-          pageSize: 10,
-        },
-        metadata: {
-          id: {
-            edit: {},
-            list: {
-              label: 'Id',
-              searchable: true,
-              sortable: true,
-            },
-          },
-          title: {
-            edit: {
-              label: 'title',
-              description: '....',
-              editable: true,
-              visible: true,
-            },
-            list: {
-              label: 'title',
-              searchable: true,
-              sortable: true,
-            },
-          },
-          content: {
-            edit: {
-              label: 'content',
-              description: '....',
-              editable: true,
-              visible: true,
-            },
-            list: {
-              label: 'content',
-              searchable: true,
-              sortable: true,
-            },
-          },
-          json: {
-            edit: {
-              label: 'json',
-              description: '....',
-              editable: true,
-              visible: true,
-            },
-            list: {},
-          },
-          number: {
-            edit: {
-              label: 'number',
-              description: '....',
-              editable: true,
-              visible: true,
-            },
-            list: {
-              label: 'number',
-              searchable: true,
-              sortable: true,
-            },
-          },
-          date: {
-            edit: {
-              label: 'date',
-              description: '....',
-              editable: true,
-              visible: true,
-            },
-            list: {
-              label: 'date',
-              searchable: true,
-              sortable: true,
-            },
-          },
-          enum: {
-            edit: {
-              label: 'enum',
-              description: '....',
-              editable: true,
-              visible: true,
-            },
-            list: {
-              label: 'enum',
-              searchable: true,
-              sortable: true,
-            },
-          },
-          pic: {
-            edit: {
-              label: 'pic',
-              description: '....',
-              editable: true,
-              visible: true,
-            },
-            list: {},
-          },
-          tags: {
-            edit: {
-              label: 'tags',
-              description: '....',
-              editable: true,
-              visible: true,
-            },
-            list: {},
-          },
-          bool: {
-            edit: {
-              label: 'bool',
-              description: '....',
-              editable: true,
-              visible: true,
-            },
-            list: {
-              label: 'bool',
-              searchable: true,
-              sortable: true,
-            },
-          },
-        },
-        layouts: {
-          list: ['id', 'title', 'content'],
-          editRelations: [],
-          edit: [
-            [
-              {
-                name: 'title',
-                size: 6,
-              },
-              {
-                name: 'content',
-                size: 6,
-              },
-            ],
-          ],
-        },
-      },
       article: {
         uid: 'article',
         schema: {
-          // good old schema
           connection: 'default',
           collectionName: 'articles',
-          options: {},
-          infos: {
+          info: {
             name: 'article',
             description: '',
+          },
+          options: {
+            increments: true,
+            timestamps: ['created_at', 'updated_at'],
+            comment: '',
           },
           attributes: {
             title: {
               type: 'string',
+              required: true,
+              minLength: 2,
             },
             content: {
               type: 'text',
+            },
+            published: {
+              type: 'boolean',
+            },
+            value: {
+              type: 'integer',
             },
             json: {
               type: 'json',
@@ -238,71 +66,153 @@ module.exports = {
               type: 'date',
             },
             enum: {
-              enum: ['morning,', 'noon'],
               type: 'enumeration',
+              enum: ['morning,', 'noon'],
+            },
+            bool: {
+              type: 'boolean',
             },
             pic: {
               model: 'file',
               via: 'related',
               plugin: 'upload',
             },
-            bool: {
-              type: 'boolean',
+            pictures: {
+              collection: 'file',
+              via: 'related',
+              plugin: 'upload',
             },
-            tags: {
-              collection: 'tag',
-              via: 'articles',
+            mainTag: {
+              type: 'relation',
+              targetModel: 'tag',
+              relationType: 'oneWay',
+            },
+            linkedTags: {
+              targetModel: 'tag',
+              relationType: 'manyWay',
+              type: 'relation',
+            },
+            manyTags: {
+              targetModel: 'tag',
+              type: 'relation',
+              relationType: 'manyToMany',
+            },
+            fb_cta: {
+              required: true,
+              type: 'group',
+              group: 'cta_facebook',
+              repeatable: false,
+            },
+            mainIngredient: {
+              type: 'group',
+              group: 'ingredients',
+              repeatable: false,
+            },
+            ingredients: {
+              type: 'group',
+              group: 'ingredients',
+              repeatable: true,
+              min: 1,
+              max: 10,
             },
           },
         },
-        settings: {
-          mainField: 'id',
-          defaultSortBy: 'id',
-          defaultSortOrder: 'ASC',
-          searchable: true,
-          filterable: true,
-          bulkable: true,
-          pageSize: 10,
-        },
         metadata: {
           id: {
-            edit: {},
+            edit: {
+              label: 'id',
+              description: '....',
+              editable: true,
+              visible: false,
+            },
             list: {
               label: 'Id',
               searchable: true,
               sortable: true,
             },
           },
+          created_at: {
+            edit: {
+              label: 'Created At',
+              description: '',
+              editable: false,
+              visible: false,
+            },
+            list: {
+              label: 'Created At',
+              searchable: true,
+              sortable: true,
+            },
+          },
+          updated_at: {
+            edit: {
+              label: 'Updated At',
+              description: '',
+              editable: false,
+              visible: false,
+            },
+            list: {
+              label: 'Updated At',
+              searchable: true,
+              sortable: true,
+            },
+          },
           title: {
             edit: {
-              label: 'title',
-              description: '....',
+              label: 'Title',
+              description: '',
               editable: true,
               visible: true,
             },
             list: {
-              label: 'title',
+              label: 'Title',
               searchable: true,
-              sortable: false,
+              sortable: true,
             },
           },
           content: {
             edit: {
-              label: 'content',
-              description: '....',
+              label: 'Content',
+              description: '',
               editable: true,
               visible: true,
             },
             list: {
-              label: 'content',
+              label: 'Content',
+              searchable: true,
+              sortable: true,
+            },
+          },
+          published: {
+            edit: {
+              label: 'Published',
+              description: '',
+              editable: true,
+              visible: true,
+            },
+            list: {
+              label: 'Published',
+              searchable: true,
+              sortable: true,
+            },
+          },
+          value: {
+            edit: {
+              label: 'Value',
+              description: '',
+              editable: true,
+              visible: true,
+            },
+            list: {
+              label: 'Value',
               searchable: true,
               sortable: true,
             },
           },
           json: {
             edit: {
-              label: 'json',
-              description: '....',
+              label: 'Json',
+              description: '',
               editable: true,
               visible: true,
             },
@@ -310,78 +220,133 @@ module.exports = {
           },
           number: {
             edit: {
-              label: 'number',
-              description: '....',
+              label: 'Number',
+              description: '',
               editable: true,
               visible: true,
             },
             list: {
-              label: 'number',
+              label: 'Number',
               searchable: true,
               sortable: true,
             },
           },
           date: {
             edit: {
-              label: 'date',
-              description: '....',
+              label: 'Date',
+              description: '',
               editable: true,
               visible: true,
             },
             list: {
-              label: 'date',
+              label: 'Date',
               searchable: true,
               sortable: true,
             },
           },
           enum: {
             edit: {
-              label: 'enum',
-              description: '....',
+              label: 'Enum',
+              description: '',
               editable: true,
               visible: true,
             },
             list: {
-              label: 'enum',
+              label: 'Enum',
+              searchable: true,
+              sortable: true,
+            },
+          },
+          bool: {
+            edit: {
+              label: 'Bool',
+              description: '',
+              editable: true,
+              visible: true,
+            },
+            list: {
+              label: 'Bool',
               searchable: true,
               sortable: true,
             },
           },
           pic: {
             edit: {
-              label: 'pic',
-              description: '....',
+              label: 'Pic',
+              description: '',
               editable: true,
               visible: true,
             },
             list: {},
           },
-          tags: {
+          pictures: {
             edit: {
-              label: 'tags',
-              description: '....',
+              label: 'Pictures',
+              description: '',
               editable: true,
               visible: true,
             },
             list: {},
           },
-          bool: {
+          mainTag: {
             edit: {
-              label: 'bool',
-              description: '....',
+              label: 'Main Tag',
+              description: '',
+              editable: true,
+              visible: true,
+              mainField: 'name',
+            },
+            list: {},
+          },
+          linkedTags: {
+            edit: {
+              label: 'Linked Tags',
+              description: '',
+              editable: true,
+              visible: true,
+              mainField: 'name',
+            },
+            list: {},
+          },
+          manyTags: {
+            edit: {
+              label: 'Many Tags',
+              description: '',
+              editable: true,
+              visible: true,
+              mainField: 'name',
+            },
+            list: {},
+          },
+          fb_cta: {
+            edit: {
+              label: 'FB CTA',
+              description: '',
               editable: true,
               visible: true,
             },
-            list: {
-              label: 'bool',
-              searchable: true,
-              sortable: true,
+            list: {},
+          },
+          mainIngredient: {
+            edit: {
+              label: 'Main Ingredient',
+              description: '',
+              editable: true,
+              visible: true,
             },
+            list: {},
+          },
+          ingredients: {
+            edit: {
+              label: 'Ingredients',
+              description: '',
+              editable: true,
+              visible: true,
+            },
+            list: {},
           },
         },
         layouts: {
-          list: ['id', 'title', 'content'],
-          editRelations: [],
           edit: [
             [
               {
@@ -393,63 +358,83 @@ module.exports = {
                 size: 6,
               },
             ],
+            [
+              {
+                name: 'value',
+                size: 6,
+              },
+              {
+                name: 'published',
+                size: 4,
+              },
+            ],
+            [
+              {
+                name: 'json',
+                size: 12,
+              },
+            ],
+            [
+              {
+                name: 'pic',
+                size: 6,
+              },
+            ],
+            [
+              {
+                name: 'pictures',
+                size: 6,
+              },
+            ],
+            [
+              {
+                name: 'number',
+                size: 6,
+              },
+            ],
+            [
+              {
+                name: 'fb_cta',
+                size: 12,
+              },
+            ],
+            [
+              {
+                name: 'mainIngredient',
+                size: 12,
+              },
+            ],
+            [
+              {
+                name: 'ingredients',
+                size: 12,
+              },
+            ],
           ],
+          editRelations: ['mainTag', 'linkedTags', 'manyTags'],
+          list: ['id', 'title', 'published'],
+        },
+        settings: {
+          mainField: 'id',
+          defaultSortBy: 'id',
+          defaultSortOrder: 'ASC',
+          searchable: true,
+          filterable: true,
+          bulkable: true,
+          pageSize: 10,
         },
       },
-      user: {
-        uid: 'user',
+      cta_facebook: {
         schema: {
-          // good old schema
+          name: 'CTA Facebook',
           connection: 'default',
-          collectionName: 'users-permissions_user',
-          info: {
-            name: 'user',
-            description: '',
-          },
+          collectionName: 'cta_facebook_aa',
           attributes: {
-            username: {
+            title: {
               type: 'string',
-              minLength: 3,
-              unique: true,
-              configurable: false,
-              required: true,
             },
-            email: {
-              type: 'email',
-              minLength: 6,
-              configurable: false,
-              required: true,
-            },
-            provider: {
-              type: 'string',
-              configurable: false,
-            },
-            password: {
-              type: 'password',
-              minLength: 6,
-              configurable: false,
-              private: true,
-            },
-            resetPasswordToken: {
-              type: 'string',
-              configurable: false,
-              private: true,
-            },
-            confirmed: {
-              type: 'boolean',
-              default: false,
-              configurable: false,
-            },
-            blocked: {
-              type: 'boolean',
-              default: false,
-              configurable: false,
-            },
-            role: {
-              model: 'role',
-              via: 'users',
-              plugin: 'users-permissions',
-              configurable: false,
+            description: {
+              type: 'text',
             },
           },
         },
@@ -463,120 +448,197 @@ module.exports = {
           pageSize: 10,
         },
         metadata: {
-          id: {
-            edit: {},
-            list: {
-              label: 'Id',
-              searchable: true,
-              sortable: true,
-            },
-          },
-          username: {
+          title: {
             edit: {
-              label: 'username',
+              label: 'Title',
               description: '....',
               editable: true,
               visible: true,
             },
             list: {
-              label: 'username',
+              label: 'Title',
               searchable: true,
               sortable: true,
             },
           },
-          email: {
+          description: {
             edit: {
-              label: 'email',
+              label: 'Description',
               description: '....',
               editable: true,
               visible: true,
             },
             list: {
-              label: 'email',
+              label: 'Description',
               searchable: true,
               sortable: true,
-            },
-          },
-          provider: {
-            edit: {
-              label: 'provider',
-              description: '....',
-              editable: true,
-              visible: true,
-            },
-            list: {
-              label: 'provider',
-              searchable: true,
-              sortable: true,
-            },
-            confirmed: {
-              edit: {
-                label: 'confirmed',
-                description: '....',
-                editable: true,
-                visible: true,
-              },
-              list: {
-                label: 'confirmed',
-                searchable: true,
-                sortable: true,
-              },
-            },
-            blocked: {
-              edit: {
-                label: 'blocked',
-                description: '....',
-                editable: true,
-                visible: true,
-              },
-              list: {
-                label: 'blocked',
-                searchable: true,
-                sortable: true,
-              },
-            },
-            role: {
-              edit: {
-                label: 'role',
-                description: '....',
-                editable: true,
-                visible: true,
-              },
-              list: {},
             },
           },
         },
         layouts: {
-          list: ['id', 'username', 'email'],
-          editRelations: ['role'],
           edit: [
-            [
-              {
-                name: 'username',
-                size: 6,
-              },
-              {
-                name: 'email',
-                size: 6,
-              },
-              {
-                name: 'provider',
-                size: 6,
-              },
-              {
-                name: 'password',
-                size: 6,
-              },
-              {
-                name: 'confirmed',
-                size: 4,
-              },
-              {
-                name: 'blocked',
-                size: 4,
-              },
-            ],
+            [{ name: 'title', size: 6 }],
+            [{ name: 'description', size: 6 }],
           ],
+        },
+        uid: 'cta_facebook',
+      },
+      ingredients: {
+        uid: 'ingredients',
+        schema: {
+          collectionName: 'group_ingredients',
+          connection: 'default',
+          attributes: {
+            name: {
+              type: 'string',
+              required: true,
+            },
+            quantity: {
+              type: 'float',
+              required: true,
+            },
+            picture: {
+              model: 'file',
+              via: 'related',
+              plugin: 'upload',
+            },
+            article: {
+              targetModel: 'article',
+              type: 'relation',
+              relationType: 'oneToOne',
+            },
+          },
+        },
+
+        layouts: {
+          edit: [
+            [{ name: 'name', size: 6 }, { name: 'quantity', size: 6 }],
+            [{ name: 'picture', size: 6 }, { name: 'article', size: 6 }],
+          ],
+          editRelations: [],
+          list: [],
+        },
+        metadata: {
+          name: {
+            edit: {
+              label: 'Name',
+              description: '....',
+              editable: true,
+              visible: true,
+            },
+            list: {
+              label: 'Name',
+              searchable: true,
+              sortable: true,
+            },
+          },
+          quantity: {
+            edit: {
+              label: 'Quantity',
+              description: '....',
+              editable: true,
+              visible: true,
+            },
+            list: {
+              label: 'Quantity',
+              searchable: true,
+              sortable: true,
+            },
+          },
+          picture: {
+            edit: {
+              label: 'Picture',
+              description: '....',
+              editable: true,
+              visible: true,
+            },
+            list: {},
+          },
+          article: {
+            edit: {
+              label: 'Article',
+              description: '....',
+              editable: true,
+              visible: true,
+              mainField: 'title',
+            },
+            list: {},
+          },
+        },
+        settings: {
+          mainField: 'id',
+          defaultSortBy: 'id',
+          defaultSortOrder: 'ASC',
+          searchable: true,
+          filterable: true,
+          bulkable: true,
+          pageSize: 10,
+        },
+      },
+      tag: {
+        uid: 'tag',
+        settings: {
+          mainField: 'id',
+          defaultSortBy: 'id',
+          defaultSortOrder: 'ASC',
+          searchable: true,
+          filterable: true,
+          bulkable: true,
+          pageSize: 10,
+        },
+        schema: {
+          connection: 'default',
+          collectionName: 'tags',
+          info: {
+            name: 'tag',
+            description: '',
+          },
+          options: {
+            increments: true,
+            timestamps: false,
+          },
+          attributes: {
+            name: {
+              type: 'string',
+              required: true,
+              minLength: 1,
+            },
+            linkedArticles: {
+              targetModel: 'article',
+              type: 'relation',
+              relationType: 'manyToMany',
+            },
+          },
+        },
+        metadata: {
+          name: {
+            edit: {
+              label: 'Name',
+              description: '....',
+              editable: true,
+              visible: true,
+            },
+            list: {
+              label: 'Name',
+              searchable: true,
+              sortable: true,
+            },
+          },
+          linkedArticles: {
+            edit: {
+              label: 'Linked Articles',
+              description: '....',
+              editable: true,
+              visible: true,
+              mainField: 'title',
+            },
+            list: {},
+          },
+        },
+        layouts: {
+          edit: [[{ name: 'name', size: 6 }]],
+          editRelations: ['linkedArticles'],
+          list: ['name'],
         },
       },
     };
@@ -585,34 +647,64 @@ module.exports = {
   },
 
   getModels: ctx => {
-    const models = [
-      {
-        name: 'article',
-        label: 'Article',
-        destination: 'article',
-      },
-      {
-        name: 'tag',
-        label: 'Tag',
-        destination: 'tag',
-      },
-      {
-        name: 'administrator',
-        label: 'Administrator',
-        destination: 'administrator',
-        source: 'admin', // this should be removed at some point
-        isDisplayed: false,
-      },
-      {
-        name: 'user',
-        label: 'Users',
-        destination: 'user',
-        source: 'users-permissions', // this should be removed at some point
-        isDisplayed: true,
-      },
-    ];
+    const models = Object.keys(strapi.models)
+      .filter(key => key !== 'core_store')
+      .map(name => {
+        const { info } = strapi.models[name];
 
-    ctx.body = { models };
+        return {
+          name,
+          label: info.name,
+          destination: name,
+          isDisplayed: true,
+        };
+      });
+    const pluginsModels = Object.keys(strapi.plugins).reduce(
+      (acc, pluginKey) => {
+        const plugin = strapi.plugins[pluginKey];
+        const pluginModels = Object.keys(plugin.models).reduce(
+          (acc2, modelName) => {
+            const { info } = plugin.models[modelName];
+
+            const modelItem = {
+              name: modelName,
+              label: info.name,
+              destination: modelName,
+              isDisplayed: true,
+              source: pluginKey,
+            };
+
+            if (['file', 'permission', 'role'].includes(modelName)) {
+              modelItem.isDisplayed = false;
+            }
+
+            return acc2.concat(modelItem);
+          },
+          []
+        );
+
+        if (pluginModels.length > 0) {
+          return [...acc, ...pluginModels];
+        }
+
+        return acc;
+      },
+      []
+    );
+    const adminModels = Object.keys(strapi.admin.models).map(name => {
+      return {
+        name,
+        label: name,
+        destination: name,
+        isDisplayed: false,
+        source: 'admin',
+      };
+    });
+    const pluralizedModels = [...models, ...pluginsModels, ...adminModels].map(
+      obj => ({ ...obj, label: upperFirst(pluralize(obj.label)) })
+    );
+
+    ctx.body = { models: pluralizedModels };
   },
 
   updateGeneralSettings: ctx => {
