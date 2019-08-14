@@ -151,6 +151,11 @@ module.exports = {
           children: ['/3.0.0-beta.x/api-reference/reference'],
         },
         {
+          collapsable: true,
+          title: '🎒 Tutorials, How-tos & Hacks',
+          children: ['/3.0.0-beta.x/tutorials/deliveroo-nuxt-tutorial'],
+        },
+        {
           collapsable: false,
           title: '📚 Resources',
           children: [
