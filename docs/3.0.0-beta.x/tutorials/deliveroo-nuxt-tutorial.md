@@ -1,5 +1,7 @@
 # Deliveroo clone with Nuxt, GraphQL, Strapi and Stripe
 
+*By [Pierre Burgy](https://github.com/pierreburgy), revised by [Maxime Castres](https://github.com/Mcastres) on August 19, 2019.*
+
 Get ready to develop a **Deliveroo clone, using amazing technologies: [Nuxt](https://nuxtjs.org) ([Vuejs](https://vuejs.org)), [GraphQL](https://graphql.org), [Stripe](http://stripe.com/) and [Strapi](https://strapi.io/)**! From signup to order, you are going to let users discover restaurants, dishes and select their happy meal.
 
 ![Tutorial illustration](https://blog.strapi.io/content/images/2018/07/nuxt-article.png)
@@ -8,7 +10,7 @@ The **demo of the final result** should make you hungry:
 
 ![final result](https://blog.strapi.io/content/images/2018/07/full-2.gif)
 
-*Note: the **source code** is **available on GitHub**: [https://github.com/strapi/strapi-examples/tree/master/nuxt-strapi-deliveroo-clone-tutorial](https://github.com/strapi/strapi-examples/tree/master/nuxt-strapi-deliveroo-clone-tutorial)*
+**Note:** The **source code** is **available on GitHub:** [https://github.com/strapi/strapi-examples/tree/master/nuxt-strapi-deliveroo-clone-tutorial](https://github.com/strapi/strapi-examples/tree/master/nuxt-strapi-deliveroo-clone-tutorial)*
 
 ## Introduction
 
@@ -16,41 +18,39 @@ The **demo of the final result** should make you hungry:
 
 [Nuxt.js](https://nuxtjs.org) is an amazing framework for creating **apps with Vue.js**. Designed to build production ready applications, it provides a solid project structure built with Webpack and Babel.
 
-[Vue.js](https://vuejs.org) is one of the most famous **front-end framework**, with more than 100K stars (🙈) on GitHub. Created in 2014 by [Evan You](https://twitter.com/youyuxi), it quickly became a reference thanks to three main advantages: extremely simple yet **powerful API**, **small library size**, and **great performances**.
+[Vue.js](https://vuejs.org) is one of the most famous **front-end frameworks**, with more than 100K stars (🙈) on GitHub. Created in 2014 by [Evan You](https://twitter.com/youyuxi), it has quickly become a reference thanks to three main advantages: and extremely simple yet **powerful API**, a **small library size**, and **great performance**.
 
 ### GraphQL
-REST is the convention powering 99% of the live APIs. Succeeding to SOAP, it quickly became the de-facto convention because of its simplicity.
+REST is the convention powering 99% of the live APIs. Succeeding SOAP, it quickly became the de-facto convention because of its simplicity.
 
-In 2015, Facebook published [GraphQL](https://graphql.org): a **powerful query language to request APIs**. Since its publication, it kept growing and have been adopted by giants, such as GitHub, Twitter and Yelp.
+In 2015, Facebook published [GraphQL](https://graphql.org): a **powerful query language to request APIs**. Since its publication, it kept growing and has been adopted by giants, such as GitHub, Twitter and Yelp.
 
 ### Strapi
 
 [Strapi](https://strapi.io) is the *The **open source Headless CMS Front-End Developers love***. It saves weeks of API development time.
 
-With its extensible plugin system, it provides a large set of built-in features: Admin Panel, Authentication & Permissions management, Content Management, API Generator, etc. Unlike online CMS, **Strapi is 100% open-source** (take a look at the [GitHub repository](https://github.com/strapi/strapi)), which means:
+With its extensible plugin system, it provides a large set of built-in features: Admin Panel, Authentication & Permissions management, Content Management, API Generator, etc. **Strapi is 100% open-source** (take a look at the [GitHub repository](https://github.com/strapi/strapi)), which means:
 
-**Strapi is completely free**.
-
-You can **host it on your own servers**, so you own the data.
-
-It is entirely **customisable and extensible**, thanks to the plugin system.
+  - **Strapi is completely free**.
+  - You can **host it on your own servers**, so you own the data.
+  - It is entirely **customisable and extensible**, thanks to the plugin system.
 
 ### Stripe
 
-Stripe is an **online payement processor** which makes developers' life much easier when dealing with payments. In this tutorial, we will use it to proceed orders.
+Stripe is an **online payement processor** which makes developers' life much easier when dealing with payments. In this tutorial, you will use it to process orders.
 
-Looking forward forward to cook this app? Let's **get started**!
+Looking forward to cook this app? Let's **get started**!
 
 ## Setup
 
 ## Install Nuxt
 
-First of all, you are going to setup the Nuxt project. To do so, install Vue CLI:
+First of all, you are going to setup the Nuxt.js project. To do so, install Vue CLI:
 
 ```shell
-npm install -g @vue/cli
-# OR
 yarn global add @vue/cli
+# OR
+npm install -g @vue/cli
 ```
 
 Create a directory named `deliveroo-clone-tutorial`:
@@ -60,18 +60,18 @@ mkdir deliveroo-clone-tutorial
 cd deliveroo-clone-tutorial
 ```
 
-Then, in this new folder, generate a new Nuxt project called `client`:
+Then, in this new folder, generate a new Nuxt.js project called `client`:
 ```shell
+yarn create nuxt-app client
+# OR
 npx create-nuxt-app client
 # OR
 npm init nuxt-app client
-# OR
-yarn create nuxt-app client
-
 ```
 
-There are two important things to do here.
-Choose between **npm** and **yarn** as your package manager (yarn is faster ;)) and select **Bootstrap Vue** as your UI framework to get a better design
+After running the command above, you may answer the questions, but you only need to answer the following two questions. Otherwise, just hit `enter`:
+  - Choose between **npm** and **yarn** as your package manager (we recommend yarn)
+  - Select **Bootstrap Vue** as your UI framework to get a better design
 
 ```
 ? Project name: client
@@ -80,46 +80,15 @@ Choose between **npm** and **yarn** as your package manager (yarn is faster ;)) 
 ? Choose the package manager: Yarn
 ? Choose UI framework: Bootstrap Vue
 ? Choose custom server framework: None (Recommended)
-? Choose Nuxt.js modules (Press <space> to select, <a> to toggle all, <i> to invert selection)
-? Choose linting tools (Press <space> to select, <a> to toggle all, <i> to invert selection)
-? Choose test framework None
-? Choose rendering mode Universal (SSR)
-```
-Press enter for every other questions and you'll get this result depending on your package manager:
-
-npm:
-
-```shell
-To get started:
-
-	cd client
-	npm run dev
-
-  To build & start for production:
-
-	cd client
-	npm run build
-	npm run start
-```
-
-yarn:
-
-```shell
-To get started:
-
-	cd client
-	yarn dev
-
-  To build & start for production:
-
-	cd client
-	yarn build
-	yarn start
+? Choose Nuxt.js modules ...
+? Choose linting tools ...
+? Choose test framework ...
+? Choose rendering mode Universal ...
 ```
 
 Run either:
-  - `yarn dev`
-  - `npm run dev`
+  - `cd client && yarn dev`
+  - `cd client && npm run dev`
 
 to launch your server!
 
@@ -128,7 +97,7 @@ Here you are! Open [http://localhost:3000](http://localhost:3000) to discover yo
 
 **Creating the Header component**
 
-In the same time, we are going to create our first component that we will reuse across the project.
+You are now going to create your first component that you'll reuse across the project.
 
 `components/Header.vue`
 
@@ -142,7 +111,8 @@ In the same time, we are going to create our first component that we will reuse 
 </template>  
 ```
 
-Use it in the default layout remove its style:
+In the next step, you will copy/paste the following code in order to use the new Header component, import the new component and delete the unnecessary CSS styles.
+  - copy/paste the following code to replace the default.vue.
 
 `layouts/default.vue`
 
@@ -184,20 +154,20 @@ export default {
 
 ### Strapi
 
-Having a frontend is good, but your app obviously needs a backend to manage users, restaurants, dishes and orders. To make the magic happen, let's create a Strapi API.
+Having a frontend is good, but your app obviously needs a backend to manage users, restaurants, dishes and orders. To make the magic happen, let's create a Strapi project to manage your content.
 
 ## Install Strapi
 
-*Requirements: please make sure to use [Node 9](https://nodejs.org/en/download) (or more) and have either [MongoDB](https://docs.mongodb.com/manual/installation/), Postgres or MySQL installed and running on your machine.*
+**Requirements:** Please make sure to use [Node 10](https://nodejs.org/en/download) (or more) and have either [MongoDB](https://docs.mongodb.com/manual/installation/), Postgres or MySQL installed and running on your machine.*
 
+Strapi can be used with different databases. You will use the --quickstart which will easily install Strapi with a SQLite database. This is recommended for prototyping and developing with Strapi. (Unless using MongoDB.)
 
-  Install Strapi and generate a project called `server`:
+Install Strapi and generate a project called `server`:
 
 ```shell
-npm install strapi@beta -g
-strapi new server --quickstart
-# OR
 yarn create strapi-app server
+# OR
+npx create-strapi-app server
 ```
 
 ```
@@ -205,19 +175,14 @@ yarn create strapi-app server
 ❯ Quickstart (recommended)
   Custom (manual settings)
 ```
-Quickstart (SQLite by default)
-
-Custom (SQLite, MySQL, MongoDB or Postgres), you choose
-
 
 Wait a few seconds until your project is up and running. Your web browser should be automatically open. If not, visit [http://localhost:1337/admin/](http://localhost:1337/admin/) for the next step.
 
-This is how to start Strapi server in case you stopped it
-d
+**Note:** This is how to start Strapi server in case you stopped the running process
+
 ```shell
 strapi develop
 ```
-
 
 ### Create your first User
 
@@ -225,26 +190,26 @@ strapi develop
 
 ![Strapi register](https://blog.strapi.io/content/images/2018/07/register.gif)
 
-Good job, you successfully setup both Nuxt and Strapi projects! 🎉
+Good job, you successfully setup both Nuxt.js and Strapi projects! 🎉
 
 ## Create Restaurants
 
-First of all, we need to display the list of restaurants in our web app. Of course, this list is going to be managed through our API. So, we are going to start configuring it.
+First of all, you need to display the list of restaurants in your web app. Of course, this list is going to be managed through your Strapi API. So, you are going to start configuring it.
 
 ### Define Content Type
 
-A Content Type, also called a `model`, is a type of data. A Strapi API includes, by default, the `user` Content Type. Right now, we need restaurants, so our new Content Type is going to be, as you already guessed, `restaurant` (Content Types are always singular).
+A Content Type, also called a `model`, is a type of data. A Strapi API includes, by default, the `user` Content Type. Right now, you need restaurants, so your new Content Type is going to be, as you already guessed, `restaurant` (Content Types are always singular).
 
 Here are the required steps:
 
- - Navigate to the Content Type Builder [http://localhost:1337/admin/plugins/content-type-builder](http://localhost:1337/admin/plugins/content-type-builder).
- - Click on `Add Content Type`.
- - Set `restaurant` as name.
- - Click on `Add New Field` and create the followings fields:
-   - `name` with type String.
-   - `description` with type Text with Rich Text Editor (in the Advanced Settings section of the modal, select `Display as a WYSIWYG`).
-   - `image` with type `Media`.
- - Click on Save.
+ - Navigate to the Content Type Builder [http://localhost:1337/admin/plugins/content-type-builder](http://localhost:1337/admin/plugins/content-type-builder)
+ - Click on `Add Content Type`
+ - Set `restaurant` as name and press `save`
+ - Create the followings fields:
+   - `name` with type **String**
+   - `description` with type **Text** with Rich Text Editor (in the Advanced Settings section of the modal, select `Display as a WYSIWYG`)
+   - `image` with type **Media**
+ - Click on Save for the **field types**, and then the new **Restaurant Content Type**
 
 ![Content Type Builder](https://blog.strapi.io/content/images/2018/07/content-type-builder-restaurant-1.gif)
 
@@ -252,9 +217,9 @@ At this point, your server should have automatically restarted and a new link `R
 
 ### Add some entries
 
-Well done! You created your first Content Type. The next step is to add some restaurants in your database. To do so, click on "Restaurant" in the left menu [http://localhost:1337/admin/plugins/content-manager/restaurant](http://localhost:1337/admin/plugins/content-manager/restaurant).
+Well done! You created your first Content Type. The next step is to add some restaurants to your database. To do so, click on **Restaurants** in the left menu [http://localhost:1337/admin/plugins/content-manager/restaurant](http://localhost:1337/admin/plugins/content-manager/restaurant).
 
-You are now in the Content Manager plugin: an auto-generated user interface which let you see and edit entries.
+You are now in the Content Manager plugin: a user-interface which lets you see and edit entries.
 
 Let's create a restaurant:
 
@@ -262,24 +227,28 @@ Let's create a restaurant:
  - Give it a name, a description and drop an image.
  - Save it.
 
-Create as many restaurants as you would like to see in your apps.
+Create as many restaurants as you would like to see in your app.
 
 ![Content Manager](https://blog.strapi.io/content/images/2018/07/content-manager-restaurant.gif)
 
 ### Allow access
 
-Having the items in database is great. Being able to request them from an API is even better. As you already know, Strapi's mission is to create API (I have got a super secret anecdote for you: its name is coming from Boot**strap** your **API** 😮).
-
-When you were creating your `restaurant` Content Type, Strapi created, behind the scene, a few set of files located in `api/restaurant`. These files include the logic to expose a fully customisable CRUD API. The `find` route is available at [http://localhost:1337/restaurants](http://localhost:1337/restaurants). Try to visit this URL and will be surprised to be blocked by a 403 forbidden error. This is actually totally normal: Strapi APIs are secured by design.
+Having the items in database is great. Being able to request them from the Strapi API is even better.
+When you were creating your `restaurant` Content Type, Strapi created, behind the scenes, a set of files located in `api/restaurant`. These files include the logic to expose a fully customizable CRUD API. The `find` route is available at [http://localhost:1337/restaurants](http://localhost:1337/restaurants). Try to visit this URL and will be surprised to be blocked by a *403 forbidden error*. This is actually totally normal: New Strapi APIs are secured by design.
 
 Don't worry, making this route accessible is actually super intuitive:
 
  - Navigate to the `Roles & Permissions` section of the admin plugin [http://localhost:1337/admin/plugins/users-permissions](http://localhost:1337/admin/plugins/users-permissions).
  - Click on the `Public` role.
- - Tick the `find` and `findone` checkboxes of the `Restaurant` section.
+ - Check the `find` and `findone` checkboxes of the `Restaurant` section.
  - Save.
 
-*Important*: do the same thing for the `authenticated` role.
+**Important:** do the same thing for the `authenticated` role:
+
+- Navigate to the `Roles & Permissions` section of the admin plugin [http://localhost:1337/admin/plugins/users-permissions](http://localhost:1337/admin/plugins/users-permissions).
+- Click on the `Authenticated` role.
+- Check the `find` and `findone` checkboxes of the `Restaurant` section.
+- Save.
 
 Now go back to [http://localhost:1337/restaurants](http://localhost:1337/restaurants): at this point, you should be able to see your list of restaurants.
 
@@ -287,21 +256,27 @@ Now go back to [http://localhost:1337/restaurants](http://localhost:1337/restaur
 
 ## Enabling GraphQL
 
-By default, API generated with Strapi are best on REST conventions. What if I would tell you that you could transform them into GraphQL within 10 seconds?
+By default, the APIs generated with Strapi use REST conventions. What if I would tell you that you could transform them into GraphQL within 10 seconds?
 
-Well, let me prove you that.
+Well, let me prove that to you.
 
-A GraphQL plugin, which will make all the work for you, is available for Strapi. Install it:
+A GraphQL plugin is available for Strapi.
+  - Install it with the following command:
 
 ```shell
-strapi install graphql
+cd server
+
+yarn strapi install graphql
+# OR
+npm run strapi install graphql
 ```
 
 And that's it, you are done.
 
 ![GraphQL installation](https://blog.strapi.io/content/images/2018/07/Screen-Shot-2018-07-02-at-17.03.38.png)
 
-Restart your server, go to [http://localhost:1337/graphql](http://localhost:1337/graphql) and try this query:
+  - Restart your server (`yarn develop` or `npm run develop`)
+  - Go to [http://localhost:1337/graphql](http://localhost:1337/graphql) and try the following query:
 
 ```graphql
 {
@@ -314,29 +289,33 @@ Restart your server, go to [http://localhost:1337/graphql](http://localhost:1337
 
 ![Strapi GraphQL](https://blog.strapi.io/content/images/2018/07/graphql.gif)
 
+You should see the restaurants, if you did, you are ready to go onto the next step.
+
 ### Display restaurants
 
-It looks you are going to the right direction. What if we would display these restaurants in our Nuxt app?
+It looks you are going to the right direction. What if you would display these restaurants in your Nuxt.js app?
 
 ![Restaurants list](https://blog.strapi.io/content/images/2018/07/restaurants-1.gif)
 
-Switch to your frontend code.
+Open an other tab in your terminal and switch to your frontend code.
 
 ```shell
-cd client
+cd ./deliveroo-clone-tutorial/client
 ```
 
-To quicken our front-end development, we are going to install the [Strapi JavaScript SDK](https://github.com/strapi/strapi-sdk-javascript):
+To quicken your front-end development, you are going to install the [Strapi JavaScript SDK](https://github.com/strapi/strapi-sdk-javascript):
 
 ```shell
-npm install strapi-sdk-javascript
-# OR
 yarn add strapi-sdk-javascript
+# OR
+npm install strapi-sdk-javascript
 ```
 
-First, we are going to create a [store](https://nuxtjs.org/guide/vuex-store) to keep our restaurants list organized.
+First, you are going to create a [store](https://nuxtjs.org/guide/vuex-store) to keep your restaurants list organized.
 
-This store has a simple state which contains the list of restaurants. We add two mutations: one to add restaurants to the list and another to empty the list. To easily get the list of restaurants from any component, we also add a getter.
+This store has a simple state which contains the list of restaurants. You add two mutations: one to add restaurants to the list and another to empty the list. To easily get the list of restaurants from any component, you also add a getter. You already have a `store` directory so you'll need to create the following file:
+
+  - Create a file called `restaurants.js` and copy/paste the following code:
 
 `store/restaurants.js`
 
@@ -361,7 +340,9 @@ export const getters = {
 }
 ```
 
-Now that our store is ready, we can start working on the view. Since we want to display the restaurants on the homepage, we are going to update the `pages/index.vue`.
+Now that your store is ready, you can start working on the view. Since you want to display the restaurants on the homepage, you need to update the `pages/index.vue`.
+
+  - Copy/paste the following code:
 
 `pages/index.vue`
 
@@ -451,32 +432,51 @@ Two main sections are visible here: the template and the script. These are typic
 
 The template section defines the structure of the page. As you can see, some attributes are very specific to Vue.js:
 
- - `v-for`: repeat the current tag as many times as the array length (`restaurants` in our case).
- - `v-if`: display the tag only if the condition is valid.
- - `v-model`: bind a variable according to the value of the input. Useful here to create a simple search system to filter restaurants according to their name.
- - `vue-router`: create a link to another page.
+ 1. `v-for`: repeat the current tag as many times as the array length (`restaurants` in your case).
+ 2. `v-if`: display the tag only if the condition is valid.
+ 3. `v-model`: bind a variable according to the value of the input. Useful here to create a simple search system to filter restaurants according to their name.
+ 4. `vue-router`: create a link to another page.
 
-In the script section, we import our required components and node modules. The `fetch` function, which is verify specific to Nuxt, is called when the page is loading: the content is not displayed until this function is resolved.
+In the script section, you imported your required components and node modules. The `fetch` function, which is verify specific to Nuxt, is called when the page is loading: the content is not displayed until this function is resolved.
 
 Well done!
 
 ## Create Dishes
 
-Congratulations, you successfully displayed the list of restaurants! This was the first major step.
+Congratulations, you successfully displayed the list of restaurants! This was the first major step. The next step is to create dishes that go with the restaurants. Your Strapi project needs to be running.
+
+  - **Note:** If Strapi is not running, restart it with the following commands: `yarn develop` or `npm run develop`
 
 ### Define Content Type
 
-Every restaurant sells dishes, which also must be stored in the database. So, we now need a new Content Type, obviously named `dish`. Since you already know how to create it, I am going to give only its attributes:
+Every restaurant sells dishes, which also must be stored in the database. So, you now need to create a new Content Type named `dish`.
 
- - `name` with type `String`.
- - `description` with type `Text`.
- - `image` with type `Media`.
- - `price` with type `Number` (decimal).
- - `restaurant` with type `Relation`: this one is a bit more specific. Our purpose here is to tell to Strapi that every dish can be related to a restaurant. To do so, create a one-to-many relation, as below.
-
- Do not forget to tick both `find` and `findone` checkboxes of the `Dishes` section in the Roles and Permissions section
+- Navigate to the Content Type Builder [http://localhost:1337/admin/plugins/content-type-builder](http://localhost:1337/admin/plugins/content-type-builder)
+- Click on `Add Content Type`
+- Set `dish` as name and press `save`
+- Create the followings fields:
+  - `name` with type `String`.
+  - `description` with type `Text` with Rich Text Editor (in the Advanced Settings section of the modal, select `Display as a WYSIWYG`).
+  - `image` with type `Media`.
+  - `price` with type `Number` (decimal).
+  - `restaurant` with type `Relation`: this one is a bit more specific. Your purpose here is to tell to Strapi that every dish can be related to a restaurant. To do so, create a one-to-many relation, as below.
+    - In the right menu dropdown from `Permission` to `Restaurant`
+    - Click on the `many to one` icon (Restaurant has many Dishes)
+- Click on Save for the **field types**, and then the new **Dish Content Type**
 
 ![Strapi relation](https://blog.strapi.io/content/images/2018/07/Screen-Shot-2018-07-02-at-17.27.19.png)
+
+Don't forget to allow access in the Roles & Permissions section:
+
+- Navigate to the `Roles & Permissions` section of the admin plugin [http://localhost:1337/admin/plugins/users-permissions](http://localhost:1337/admin/plugins/users-permissions).
+- Click on the `Public` role.
+- Check the `find` and `findone` checkboxes of the `Dish` section.
+- Save.
+
+- Navigate to the `Roles & Permissions` section of the admin plugin [http://localhost:1337/admin/plugins/users-permissions](http://localhost:1337/admin/plugins/users-permissions).
+- Click on the `Authenticated` role.
+- Check the `find` and `findone` checkboxes of the `Restaurant` section.
+- Save.
 
 Here is the final result:
 
@@ -484,15 +484,14 @@ Here is the final result:
 
 ### Add some entries
 
-Then, add some dishes from the Content Manager: [http://localhost:1337/admin/plugins/content-manager/dish](http://localhost:1337/admin/plugins/content-manager/dish). Make sure they all have an image and are linked to a restaurant.
+  - Click on `Dishes` in the left navbar
+  - Click on the `Add new Dish` button and add some dishes. Make sure they all have an image and are linked to a restaurant
 
 ### Display dishes
 
 Go back to the frontend code. The steps are pretty similar to the restaurants list.
 
-![Dishes list](https://blog.strapi.io/content/images/2018/07/dishes.gif)
-
-First, create a new store:
+  - Create a file called `dishes.js` and copy/paste the following code:
 
 `store/dishes.js`
 
@@ -517,9 +516,14 @@ export const getters = {
 }
 ```
 
-The dishes page must be accessible from `http://localhost:3000/restaurants/1234.js` where `1234` is the id of the restaurant. Nuxt creates urls according to the name of the files located in `pages`. For that reason, you have to create a new file named `_id.vue` in `pages/restaurants`.
+![Dishes list](https://blog.strapi.io/content/images/2018/07/dishes.gif)
 
-`pages/restaurants/_id.vue`
+The dishes page should be accessible from `http://localhost:3000/restaurants/1234.js` where `1234` is the id of the restaurant. Nuxt.js creates urls according to the name of the files located in `pages`. For this reason, you have to create a new file called `_id.vue` in `pages/restaurants`.
+
+  - Create a `restaurants` folder in `./pages` folder
+  - Create a file called `_id.vue` and copy/paste the following code:
+
+`./pages/restaurants/_id.vue`
 
 ```js
 <template>
@@ -535,7 +539,7 @@ The dishes page must be accessible from `http://localhost:3000/restaurants/1234.
                 <h5 class="card-title">{{ dish.name }}</h5>
                 <p class="card-text">{{ dish.description || 'No description provided.' }}</p>
                 <p class="card-text">${{ dish.price }}</p>
-                <button class="btn btn-primary">Add to card</button>
+                <button class="btn btn-primary">Add to cart</button>
               </div>
             </div>
           </div>
@@ -543,7 +547,7 @@ The dishes page must be accessible from `http://localhost:3000/restaurants/1234.
         <div class="col-md-4">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Card</h5>
+              <h5 class="card-title">Cart</h5>
             </div>
           </div>
         </div>
@@ -601,17 +605,15 @@ export default {
 </script>
 ```
 
-Nothing particular here: exactly like for the restaurants, we define a template and add the logic in the script section.
+Nothing particular here: exactly like for the restaurants, you defined a template and then add the logic in the script section.
 
 ## Authentication
 
-At this point, you may have expected to get ready to order. But before that, we need to give the user the possibility to register and login to our app. No worries, Strapi comes to the rescue with its Users & Permissions plugin already installed in your project.
-
-![Authentication](https://blog.strapi.io/content/images/2018/07/authentication.gif)
+At this point, you may have expected to get ready to order. But before that, you need to give the user the possibility to register and login to your app. No worries, Strapi comes to the rescue with its Users & Permissions plugin already installed in your project.
 
 ### Auth store
 
-As you may imagine, we need a store dedicated to the authentication:
+- Create a file called `auth.js` in the `store` folder and copy/paste the following code:
 
 `store/auth.js`
 
@@ -634,21 +636,24 @@ Nothing related to this food tutorial...
 
 Most of the time, progressive web apps store a JSON Web Token (JWT) in the local storage. That works pretty well, and this is what the Strapi JavaScript SDK does by default (it also stores it as a cookie).
 
-The fact is that we would like to display the username in the header (coming later in this tutorial). So we need to store it somewhere.
+The fact is that you would like to display the username in the header (coming later in this tutorial). So you need to store it somewhere.
 
-We could have store it in the local storage, but since Nuxt supports server-side rendering, which has not access to the local storage, we need to store it in the cookies.
+You could have stored it in the local storage, but since Nuxt.js supports server-side rendering, which does not have access to the local storage, you need to store it in the browser cookies.
 
-For that reason, you have to install `js-cookie`:
+For this reason, you have to install `js-cookie`:
+
+  - Go into your `client` folder
+  - Install `js-cookie` with the following command:
 
 ```shell
-npm i js-cookie
-# OR
 yarn add js-cookie
+# OR
+npm i js-cookie
 ```
 
 ### Register
 
-Create a new file named `signup.vue` in the pages directory, with the following content:
+  - Create a new file named `signup.vue` in the `pages` directory, and copy/past the following content:
 
 `pages/signup.vue`
 
@@ -739,15 +744,16 @@ export default {
 
 ```
 
-In this page, we insert a form which has three inputs: username, email and address. We also define a method named `handleSubmit` which uses the Strapi SDK to register the user before redirecting him to the home page.
+In this page, you insert a form which has three inputs: **username**, **email** and **address**. You also defined a method named `handleSubmit` which uses the Strapi SDK to register the user before redirecting them to the home page.
 
-Create a new user from this new page: [http://localhost:3000/signup](http://localhost:3000/signup).
+  - Restart the client
+  - Create a new user from this new page: [http://localhost:3000/signup](http://localhost:3000/signup).
 
 ### Logout
 
 The user must be able to logout, ideally from a button in the header.
 
-Add a `logout` mutation and a `username` setter in the `auth` store:
+  - Add a `logout` mutation and a `username` setter in the `auth` store:
 
 `store/auth.js`
 
@@ -773,6 +779,8 @@ export const getters = {
   }
 }
 ```
+
+- Modify the `Header.vue` to get something like this
 
 `components/Header.vue`
 
@@ -826,16 +834,17 @@ export default {
 }
 </script>
 ```
+Try to reload the page and you will see that no changes have been made: You still see the `signin` and `signup` links although you registered a user a few minutes ago. This happens because you did not use the `auth/setUser` mutation on the load page. Since Nuxt.js is rendered server side, you need to do a little trick using the `nuxtServerInit` action which is invoked when the Nuxt.js server starts:
 
-Try to reload the page and you will see that nothing change: you still see the `signin` and `signup` links although you registered a user a few minutes ago. That happens because we do not use the `auth/setUser` mutation on the load page. Since Nuxt is rendered server side, we need to do a little trick using the `nuxtServerInit` action which is invoked when the Nuxt server starts:
-
-Install `cookieparser`:
+  - Install `cookieparser`:
 
 ```shell
-npm install cookieparser
-# OR
 yarn add cookieparser
+# OR
+npm install cookieparser
 ```
+
+- Create an `index.js` file in the `store` folder and copy/paste the following code:
 
 `store/index.js`
 
@@ -857,7 +866,7 @@ export const actions = {
 
 ### Login
 
-For the login view, we are going to do something really similar to the signup view:
+  - Create a `signin.vue` in the `pages` folder and copy/paste the following code
 
 `pages/signin.vue`
 
@@ -933,17 +942,19 @@ export default {
   }
 }
 </script>
-```
 
+**Note:** You will be redirected to the last page you visited when you sign in
+
+![Authentication](https://blog.strapi.io/content/images/2018/07/authentication.gif)
+
+```
 That's it for the authentication!
 
 ## Shopping cart
 
-All of these dishes look so tasty! What if we could add some of them in a shopping cart?
+All of these dishes look so tasty! What if you could add some of them in a shopping cart?
 
-![Shopping cart](https://blog.strapi.io/content/images/2018/07/shopping-card.gif)
-
-First, we create a new store named `cart`:
+  - Create a new file named `cart.js` and copy/paste the following code:
 
 `store/cart.js`
 
@@ -1006,9 +1017,9 @@ export const getters = {
   }
 }
 ```
+To make sure the items stay in the cart even after page reload, you will are also use cookies. So you need to update the `nuxtInitServer` function:
 
-
-To make sure the items stay in the cart across tabs and after page reload, we are also using the cookies. So we also need to update the `nuxtInitServer` function:
+  - Update the `index.js` file to get the following:
 
 `store/index.js`
 
@@ -1030,6 +1041,8 @@ export const actions = {
   }
 }
 ```
+
+  - Update the `_id.vue` file to get the following code:
 
 `pages/restaurants/_id.vue`
 
@@ -1055,7 +1068,7 @@ export const actions = {
         <div class="col-md-4">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Card</h5>
+              <h5 class="card-title">Cart</h5>
               <p class="card-text">{{ numberOfItems }} items selected:</p>
               <ul>
                 <li v-for="dish in selectedDishes" :key="dish.id" class="card-text mb-2">
@@ -1147,31 +1160,35 @@ export default {
 </script>
 ```
 
-Good job!
+Good job! You can now add dishes to your cart, check it out!
+
+![Shopping cart](https://blog.strapi.io/content/images/2018/07/shopping-card.gif)
 
 ## Order and Checkout
 
-You must start being starving... I am sure you want to be able to order!
-
-![Order](https://blog.strapi.io/content/images/2018/07/order-1.gif)
+You must be start being starving by now... I am sure you want to be able to order!
 
 ### Define Content Type
 
-We need to store the orders in our database, so we are going to create a new Content Type in our API.
+You need to store the orders in your database
+  - Create a new Content Type in your Strapi API.
 
 Same process as usual:
 
  - Navigate to the Content Type Builder [http://localhost:1337/admin/plugins/content-type-builder](http://localhost:1337/admin/plugins/content-type-builder).
- - Click on `Add Content Type`.
- - Set `order` as name.
+ - Click on `Add Content Type`
+ - Set `order` as name
  - Click on `Add New Field` and create the followings fields:
-   - `address` with type `String`.
-   - `postalCode` with type `String`.
-   - `city` with type `String`.
-   - `dishes` with type `JSON`.
-   - `amount` with type `Number` (decimal).
-   - `user` with type `Relation`: User has many orders
- - Click on Save.
+   - `address` with type **String**
+   - `postalCode` with type **String**
+   - `city` with type **String**
+   - `dishes` with type **JSON**
+   - `amount` with type **Number** (decimal)
+   - `user` with type **Relation:** User has many orders
+     - In the right menu dropdown from `Permission` to `Order`
+     - Click on the `many to one` icon (Restaurant has many Dishes)
+  - Click on Save for the **field types**, and then the new **Order Content Type**
+
 
 ![Order Content Type Builder](https://blog.strapi.io/content/images/2019/02/Screenshot-2019-02-19-at-18.16.08.png)
 
@@ -1179,22 +1196,30 @@ Same process as usual:
 
 ### Allow access
 
-To create new orders from the client, we are going to hit the `create` endpoint of the `order` API. To allow access, navigate to the Roles & Permissions section [http://localhost:1337/admin/plugins/users-permissions](http://localhost:1337/admin/plugins/users-permissions), select the `authenticated` role, tick the `order/create` checkbox and save.
+To create new orders from the client, you are going to hit the `create` endpoint of the `order` API.
+  - To allow access, navigate to the Roles & Permissions section [http://localhost:1337/admin/plugins/users-permissions](http://localhost:1337/admin/plugins/users-permissions), select the `authenticated` role, check the `order/create` checkbox
+  - Save
 
 ### Stripe setup
 
-In this section you will need Stripe API keys. To get them, create a Stripe account and navigate to [https://dashboard.stripe.com/account/apikeys](https://dashboard.stripe.com/account/apikeys)
+In this section you will need Stripe API keys.
+  - Create a Stripe account and navigate to [https://dashboard.stripe.com/account/apikeys](https://dashboard.stripe.com/account/apikeys)
 
 ### Add logic
 
-If you already used Stripe, you probably know the credit card information do not go through your backend server. Instead of that, they are directly sent to the Stripe API (ideally using their SDK). Then, your frontend receives a token. The `id` of the must be sent to your backend which will create the Stripe charge.
+If you have already used Stripe, you may know that the credit card information does not go through your backend server. Instead, the information di directly sent to the Stripe API (ideally using their SDK). Then, your frontend receives a token. The `id` of the token must be sent to your backend which will create the Stripe charge.
 
-In order to integrate the Stripe logic, we need to update the `create` charge endpoint in our Strapi API. To do so, edit `server/api/order/controllers/order.js` and replace its content with:
+In order to integrate the Stripe logic, you need to update the `create` charge endpoint in your Strapi API.
 
-`server/api/order/controllers/order.js`
+  - Update `./server/api/order/controllers/Order.js` and replace its content with:
+
+`./server/api/order/controllers/Order.js`
 
 ```js
-const stripe = require('stripe')('sk_test_CbI52CqMj8Cv4bXf822VOGhu');
+
+'use strict'
+
+const stripe = require('stripe')('YOUR_STRIPE_API_KEY');
 //...
 create: async (ctx) => {
   const {
@@ -1228,34 +1253,26 @@ create: async (ctx) => {
 }
 ```
 
-
-Install the `stripe` package:
+  - Install the `stripe` package by running
 
 ```shell
-npm install stripe
-# OR
 yarn add stripe
+# OR
+npm install stripe
 ```
 
-*Note: in a real-world example, the amount should be checked on the backend side and the list of dishes related to the command should be stored in a more specific Content Type called `orderDetail`.*
+**Note:** In a real-world example, the amount should be checked on the backend side and the list of dishes related to the command should be stored in a more specific Content Type called `orderDetail`.*
 
-Do not forget to restart the Strapi server.
+  - Restart the Strapi server with `yarn develop` or `npm run devlelop`.
 
 ### Checkout page
 
-In `pages/restaurants/_id.vue`, add the click handler to the Order button and add the `goToCheckout` method:
+button and add the `goToCheckout` method
 
-`pages/restaurants/_id.vue`
+  - In `pages/restaurants/_id.vue`, add the click handler `@click="goToCheckout"` to the Order button
+  - Add the `goToCheckout` method
 
-```js
-<template>
-<!-- ... -->
-<button :disabled="!selectedDishes.length" class="btn btn-primary" @click="goToCheckout">Order</button>
-<!-- ... -->
-</template>
-
-<script>
-//...
+```
 goToCheckout() {
   // Redirect to signin page if not logged in.
   const isConnected = this.$store.getters['auth/username']
@@ -1265,11 +1282,137 @@ goToCheckout() {
   }
   this.$router.push('/checkout')
 },
-//...
+
+```
+You will get this result:
+
+`pages/restaurants/_id.vue`
+
+```js
+<template>
+  <section class="container">
+    <div>
+      <h1 class="mt-2">Dishes</h1>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="cart-columns">
+            <div v-for="dish in dishes" :key="dish.id" class="card">
+              <img :src="dish.image.url" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title">{{ dish.name }}</h5>
+                <p class="card-text">{{ dish.description || 'No description provided.' }}</p>
+                <p class="card-text">${{ dish.price }}</p>
+                <button class="btn btn-primary" @click="addToCart(dish)">Add to cart</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Card</h5>
+              <p class="card-text">{{ numberOfItems }} items selected:</p>
+              <ul>
+                <li v-for="dish in selectedDishes" :key="dish.id" class="card-text mb-2">
+                  Name: {{ dish.name }} (${{ dish.price }}) ({{ dish.quantity }})
+                  <button class="btn btn-sm btn-success" @click="addToCart(dish)">+</button>
+                  <button class="btn btn-sm btn-warning ml-2" @click="removeFromCart(dish)">-</button>
+                </li>
+              </ul>
+              <h5 class="card-text">
+                Total: ${{ price }}
+              </h5>
+              <p v-if="!selectedDishes.length">Please select some items.</p>
+              <button :disabled="!selectedDishes.length" @click="goToCheckout" class="btn btn-primary">Order</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script>
+import Strapi from 'strapi-sdk-javascript/build/main'
+const apiUrl = process.env.API_URL || 'http://localhost:1337'
+const strapi = new Strapi(apiUrl)
+import { mapMutations } from 'vuex'
+
+export default {
+  data() {
+    return {
+      complete: false
+    }
+  },
+  computed: {
+    id() {
+      return this.$route.params.id
+    },
+    dishes() {
+      return this.$store.getters['dishes/list']
+    },
+    selectedDishes() {
+      return this.$store.getters['cart/items']
+    },
+    price() {
+      return this.$store.getters['cart/price']
+    },
+    numberOfItems() {
+      return this.$store.getters['cart/numberOfItems']
+    }
+  },
+  async fetch({ store, params }) {
+    store.commit('dishes/emptyList')
+    const response = await strapi.request('post', '/graphql', {
+      data: {
+        query: `query {
+            restaurant(id: "${params.id}") {
+              id
+              name
+              dishes {
+                id
+                name
+                description
+                price
+                image {
+                  url
+                }
+              }
+            }
+          }
+          `
+      }
+    })
+    response.data.restaurant.dishes.forEach(dish => {
+      dish.image.url = `${apiUrl}${dish.image.url}`
+      store.commit('dishes/add', {
+        id: dish.id,
+        ...dish
+      })
+    })
+  },
+  methods: {
+    ...mapMutations({
+      addToCart: 'cart/add',
+      removeFromCart: 'cart/remove',
+      emptyCart: 'cart/emptyList'
+    }),
+    goToCheckout() {
+      // Redirect to signin page if not logged in.
+      const isConnected = this.$store.getters['auth/username']
+      if (!isConnected) {
+        this.$router.push('/signin')
+        return
+      }
+      this.$router.push('/checkout')
+    },
+  }
+}
 </script>
+
 ```
 
-Now we are going to create the Checkout page:
+  - Create the `checkout.vue` file and copy/paste the following code:
 
 `pages/checkout.vue`
 
@@ -1330,7 +1473,7 @@ Now we are going to create the Checkout page:
                 required/>
             </div>
             <div class="form-group">
-              <label for="card">Card</label>
+              <label for="card">Cart</label>
               <card
                 class="form-control"
                 stripe="pk_test_4nobp9tCdjhXC4JPrmgqKnsk"
@@ -1420,21 +1563,21 @@ export default {
 </script>
 ```
 
-**Explanations 🕵️**
+**Explanation 🕵️**
 
-In this page, we display a form to get user's address and debit card informations. We use the [Stripe Elements](https://stripe.com/elements) system to go faster. When the form is submitted, we get a token from Stripe. Then, we create the order in our Strapi API.
+In this page, you display a form to get user's address and debit card information. You use the [Stripe Elements](https://stripe.com/elements) system. When the form is submitted, you get a token from Stripe. Then, you create the order in your Strapi API.
 
-Install the `vue-stripe-elements-plus` package to make it work:
+  - Install the `vue-stripe-elements-plus` package in `client` folder to make it work:
 
 ```shell
-npm i vue-stripe-elements-plus
-# OR
 yarn add vue-stripe-elements-plus
+# OR
+npm i vue-stripe-elements-plus
 ```
 
-And add the Stripe script in the nuxt config:
+  - Add the Stripe script in the Nuxt.js config:
 
-`nuxt.config.js`
+`./nuxt.config.js`
 
 ```js
 module.exports = {
@@ -1456,6 +1599,8 @@ module.exports = {
 You are now able to let users submit their order.
 
 Bon appétit! 🇫🇷
+
+![Order](https://blog.strapi.io/content/images/2018/07/order-1.gif)
 
 ## Deploy Backend on Heroku
 
@@ -1485,7 +1630,7 @@ git push heroku master
 
 Visit the URL provided by Heroku and keep it for the next step.
 
-**Note: you will have to redefine your permissions rules from the interface. This workflow will be [improved in the near future](https://github.com/strapi/strapi/issues/672).**
+**Note:** You will have to redefine your permissions rules from the interface. This workflow will be [improved in the near future](https://github.com/strapi/strapi/issues/672).**
 
 ## Deploy Frontend on Netlify
 
@@ -1507,7 +1652,7 @@ Then:
  - Select your repository.
  - Add the build command: `npm run generate`.
  - Add the publish directory: `dist`.
- - Add the API URL as environment variable: `API_URL` with the value of the Heroku project url.
+ - Add the Strapi API URL as environment variable: `API_URL` with the value of the Heroku project url.
 
 ![Netlify setup](https://blog.strapi.io/content/images/2018/07/Screen-Shot-2018-07-01-at-19.48.24.png)
 
