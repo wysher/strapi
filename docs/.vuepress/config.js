@@ -92,6 +92,14 @@ module.exports = {
         },
         {
           collapsable: true,
+          title: '🎒 Tutorials, How-tos & Hacks',
+          children: [
+            '/3.0.0-beta.x/tutorials/deliveroo-nuxt-tutorial',
+            '/3.0.0-beta.x/tutorials/deliveroo-next-tutorial',
+          ],
+        },
+        {
+          collapsable: true,
           title: '💡 Guides',
           children: [
             '/3.0.0-beta.x/concepts/concepts',
@@ -149,11 +157,6 @@ module.exports = {
           collapsable: true,
           title: '🏗 API Reference',
           children: ['/3.0.0-beta.x/api-reference/reference'],
-        },
-        {
-          collapsable: true,
-          title: '🎒 Tutorials, How-tos & Hacks',
-          children: ['/3.0.0-beta.x/tutorials/deliveroo-nuxt-tutorial'],
         },
         {
           collapsable: false,
