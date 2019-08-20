@@ -95,7 +95,6 @@ module.exports = {
           title: '🎒 Tutorials, How-tos & Hacks',
           children: [
             '/3.0.0-beta.x/tutorials/deliveroo-nuxt-tutorial',
-            '/3.0.0-beta.x/tutorials/deliveroo-next-tutorial',
           ],
         },
         {
