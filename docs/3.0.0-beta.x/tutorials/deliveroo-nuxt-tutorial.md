@@ -518,13 +518,17 @@ export default {
           `
       }
     })
+    // We check if we are hosting images on an external service, if yes then use that otherwise it's local
     response.data.restaurants.forEach(restaurant => {
-      restaurant.image.url = `${apiUrl}${restaurant.image.url}`
-      store.commit('restaurants/add', {
+      const imageUrl = restaurant.image.url;
+      restaurant.image.url = imageUrl.startsWith("https")
+        ? imageUrl
+        : `${apiUrl}${restaurant.image.url}`;
+      store.commit("restaurants/add", {
         id: restaurant.id,
         ...restaurant
-      })
-    })
+      });
+    });
   }
 }
 </script>
