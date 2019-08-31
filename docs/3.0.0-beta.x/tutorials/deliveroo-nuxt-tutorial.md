@@ -45,7 +45,8 @@ Looking forward to cook this app? Let's **get started**!
 
 ## Install Nuxt
 
-First of all, you are going to setup the Nuxt.js project. To do so, install Vue CLI:
+First of all, you are going to setup the Nuxt.js project.
+  - Instal the Vue cli
 
 ```shell
 yarn global add @vue/cli
@@ -53,14 +54,14 @@ yarn global add @vue/cli
 npm install -g @vue/cli
 ```
 
-Create and enter a directory named `deliveroo-clone-tutorial`:
+  - Create and enter a directory named `deliveroo-clone-tutorial`:
 
 ```shell
 mkdir deliveroo-clone-tutorial
 cd deliveroo-clone-tutorial
 ```
 
-Then, in this new folder, generate a new Nuxt.js project called `client`:
+  - Then, in this new folder, generate a new Nuxt.js project called `client`:
 ```shell
 yarn create nuxt-app client
 # OR
@@ -69,16 +70,14 @@ npx create-nuxt-app client
 npm init nuxt-app client
 ```
 
-After running the command above, you may answer the questions, but you only need to answer the following two questions. Otherwise, just hit `enter`:
+After running the command above, you may answer the questions, but you only need to answer the following question. Otherwise, just hit `enter`:
   - Choose between **npm** and **yarn** as your package manager (**we recommend yarn**)
-  - Select **Bootstrap Vue** as your UI framework to get some good design
 
 ```
 ? Project name: client
 ? Project description: Cooking a Deliveroo clone
 ? Author name: Me
 ? Choose the package manager: Yarn
-? Choose UI framework: Bootstrap Vue
 ? Choose custom server framework: None (Recommended)
 ? Choose Nuxt.js modules ...
 ? Choose linting tools ...
@@ -93,36 +92,107 @@ Run either:
 
 Here you are! Open [http://localhost:3000](http://localhost:3000) to discover your brand new app.
 
-**Creating the Header component**
 
-  - Create your first component that you'll reuse across the project.
+## Install UIkit
 
-`components/Header.vue`
+[UIkit](https://getuikit.com) is a lightweight and modular front-end framework for developing fast and powerful web interfaces. You are going to use this css framework for this tutorial.
 
-```js
-<template>  
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-      <router-link tag="a" class="navbar-brand" to="/" exact>Deliveroo clone</router-link>
-    </div>
-  </nav>
-</template>  
+  - Install uikit
+`./client`
+```shell
+yarn add uikit
 ```
 
-In the next step, you will copy/paste the following code in order to use the new Header component, import the new component and delete the unnecessary CSS styles.
+Now you need to initialize UIkit's Js in your Nuxt app. You are going to do this by creating a plugin.
+  - Create a `./client/plugins/uikit.js` file and copy/paste the following code:
+
+```js
+import Vue from 'vue'
+
+import UIkit from 'uikit/dist/js/uikit-core'
+import Icons from 'uikit/dist/js/uikit-icons'
+
+UIkit.use(Icons)
+UIkit.container = '#__nuxt'
+
+Vue.prototype.$uikit = UIkit
+```
+
+Plugins need to be referenced in `nuxt.config.js` file and css files too.
+  - Add the following code in your `nuxt.config.js`
+
+```js
+...
+css: [
+  "uikit/dist/css/uikit.min.css",
+  "uikit/dist/css/uikit.css",
+],
+/*
+** Plugins to load before mounting the App
+*/
+plugins: [
+  { src: '~/plugins/uikit.js', ssr: false }
+],
+...
+```
+
+Great! UIkit is ready!
+Now let's create your first component!
+
+**Creating the Header component**
+
+This `Header.vue` component will be used on every page of your application.
+
+  - Create a `Header.vue` component in `components` directory.
+
+`/client/components/Header.vue`
+
+```js
+<template>
+  // <client-only> is used to remove the generation of server-side components.
+  <client-only>
+    <nav class="uk-navbar-container" uk-navbar>
+        <div class="uk-navbar-left">
+
+            <ul class="uk-navbar-nav">
+                <li class="uk-active"><router-link tag="a" class="navbar-brand" to="/" exact>Deliveroo clone</router-link></li>
+                <li><router-link tag="a" class="navbar-brand" to="/restaurants" exact>Restaurants</router-link></li>
+            </ul>
+
+        </div>
+
+    </nav>
+  </client-only>
+</template>
+```
+
+The `layouts/default.vue` component is the root of all yours pages. Inside this component lies your `<nuxt />` application (the pages you are about to create for this tutorial)
+
+In the next step, you will copy/paste the following code in order to use the new Header component, you need to import it in the `<script>` section and delete the unnecessary CSS styles. You'll also define a section and a container where all your code will be
   - Copy/paste the following code to replace the `default.vue` file.
 
-`layouts/default.vue`
+`/client/layouts/default.vue`
 
 ```js
 <template>
   <div>
-    <Header/>
-    <nuxt/>
+    // You call your new Header component
+    <Header />
+
+    <div class="uk-section uk-section-default">
+      <div class="uk-container uk-container-large">
+
+        // This is where all yours pages will be
+        <nuxt />
+
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script>
+// Import your new Header component
 import Header from '~/components/Header.vue'
 export default {
   components: {
@@ -132,28 +202,30 @@ export default {
 </script>
 ```
 
-  - Clean the homepage content and remove its style:
+Now let's modify your homepage. This is your `/client/pages/index.vue` file
 
-`pages/index.vue`
+  - Clean your homepage content and remove its style:
+
+`/client/pages/index.vue`
 
 ```js
 <template>
-  <section class="container">
-    <div>
-      <p>Home</p>
-    </div>
-  </section>
+  <div>
+    <img src="https://media.giphy.com/media/zBL9j9oiR3VM4/giphy.gif" class="uk-position-center" alt="">
+  </div>
 </template>
 ```
 
-  - Restart the server to see your changes at [http://localhost:3000](http://localhost:3000).
-  - `yarn dev` or `npm run dev`
+Now you should be able to get to your homepage (`index.vue`) that resides in your `layouts/default.vue` which import your `Header.vue` component
+
+  - Reload the page to see your changes at [http://localhost:3000](http://localhost:3000).
+  - `yarn dev` or `npm run dev` if you stopped your client
 
 ![Home page](https://blog.strapi.io/content/images/2018/07/Screen-Shot-2018-07-02-at-15.19.04.png)
 
 ### Strapi
 
-Having a frontend is good, but your app obviously needs a backend to manage users, restaurants, dishes and orders. To make the magic happen, let's create a Strapi project to manage your content.
+Having a frontend is good, but your app obviously needs a backend to manage users, `restaurants`, `dishes` and `orders`. To make the magic happen, let's create a Strapi project to manage your content.
 
 ## Install Strapi
 
@@ -163,6 +235,7 @@ Having a frontend is good, but your app obviously needs a backend to manage user
 
   - Install Strapi and generate a project called `server`:
 
+`/deliveroo-clone-tutorial`
 ```shell
 yarn create strapi-app server --quickstart
 # OR
@@ -256,15 +329,14 @@ Well, let me prove that to you.
 A GraphQL plugin is available for Strapi.
   - Install it with the following command:
 
+`/server`
 ```shell
-cd server
-
 yarn strapi install graphql
 # OR
 npm run strapi install graphql
 ```
 
-And that's it, you are done.
+And that's it, you are done for the backend.
 
 ![GraphQL installation](https://blog.strapi.io/content/images/2018/07/Screen-Shot-2018-07-02-at-17.03.38.png)
 
@@ -284,136 +356,105 @@ And that's it, you are done.
 
 You should see the restaurants, if you did, you are ready to go onto the next step.
 
+  - Install `GraphQL` and `@Nuxt-apollo` in your `client` folder
+
+`/client`
+```shell
+yarn add @nuxtjs/apollo graphql
+# OR
+npm install @nuxtjs/apollo graphql
+```
+
+Modules and Apollo settings must be referenced in `nuxt.config.js`
+
+  - Add the following module and your apollo configurations to your `nuxt.config.js`:
+
+```js
+...
+modules: [
+  '@nuxtjs/apollo',
+],
+apollo: {
+  clientConfigs: {
+    default: {
+      httpEndpoint: 'http://localhost:1337/graphql'
+    }
+  }
+},
+...
+```
+
 ### Display restaurants
 
 It looks you are going to the right direction. What if you would display these restaurants in your Nuxt.js app?
+You want to be organized, that's why we are going to put the pages in their respective folders.
 
-![Restaurants list](https://blog.strapi.io/content/images/2018/07/restaurants-1.gif)
+  - Create a `./pages/restaurants/index.vue` file and copy/paste the following code:
 
-  - Switch to your frontend code.
-
-```shell
-cd ./deliveroo-clone-tutorial/client
-```
-
-To quicken your front-end development, you are going to install the [Strapi JavaScript SDK](https://github.com/strapi/strapi-sdk-javascript):
-
-```shell
-yarn add strapi-sdk-javascript
-# OR
-npm install strapi-sdk-javascript
-```
-
-First, you are going to create a [store](https://nuxtjs.org/guide/vuex-store) to keep your restaurants list organized.
-
-This store has a simple state which contains the list of restaurants. You add two mutations: one to add restaurants to the list and another to empty the list. To easily get the list of restaurants from any component, you also add a getter. You already have a `store` directory so you'll need to create the following file:
-
-  - Create a file called `restaurants.js` and copy/paste the following code:
-
-`store/restaurants.js`
-
-```js
-export const state = () => ({
-  list: []
-})
-
-export const mutations = {
-  add(state, restaurant) {
-    state.list.push(restaurant)
-  },
-  emptyList(state) {
-    state.list = []
-  }
-}
-
-export const getters = {
-  list: state => {
-    return state.list
-  }
-}
-```
-
-Now that your store is ready, you can start working on the view. Since you want to display the restaurants on the homepage, you need to update the `pages/index.vue`.
-
-  - Copy/paste the following code:
-
-`pages/index.vue`
+`/client/pages/restaurants/index.vue`
 
 ```js
 <template>
-  <section class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="form-group mt-3">
-          <input v-model="query" type="text" class="form-control" placeholder="Search...">
-        </div>
+  <div>
+
+      // Search input to filters restaurants
+      <form class="uk-search uk-search-large uk-align-center uk-margin">
+          <span uk-search-icon></span>
+          <input class="uk-search-input" v-model="query" type="search" placeholder="Search...">
+      </form>
+
+      // Restaurant cards
+      <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@m uk-margin" v-for="restaurant in filteredList" uk-grid>
+          <div class="uk-card-media-left uk-cover-container">
+              <img :src="'http://localhost:1337/' + restaurant.image.url" alt="" uk-cover>
+              <canvas width="600" height="400"></canvas>
+          </div>
+          <div>
+              <div class="uk-card-body">
+                  <h3 class="uk-card-title">{{ restaurant.name }}</h3>
+                  <p>{{ restaurant.description }}</p>
+                  // Link to the restaurant using router-link
+                  <router-link :to="{ name: 'restaurants-id', params: { id: restaurant.id }}" tag="a" class="uk-button uk-button-primary">See dishes
+                  </router-link>
+              </div>
+          </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <ul class="card-columns list-unstyled">
-          <li v-for="restaurant in filteredList" :key="restaurant.id" class="card">
-            <img :src="restaurant.image.url" class="card-img-top">
-            <div class="card-body">
-              <h5 class="card-title">{{ restaurant.name }}</h5>
-              <p class="card-text">{{ restaurant.description || 'No description provided' }}.</p>
-              <router-link :to="{ name: 'restaurants-id', params: { id: restaurant.id }}" tag="a" class="btn btn-primary">
-                See dishes
-              </router-link>
-            </div>
-          </li>
-          <p v-if="!filteredList.length">No results :(</p>
-        </ul>
-      </div>
-    </div>
-  </section>
+
+      // If no restaurants have been found
+      <div class="uk-container uk-container-center uk-text-center" v-if="filteredList.length == 0">
+       <img src="https://assets-ouch.icons8.com/preview/19/52de2377-696e-4194-8c63-0a81aef60b4f.png" height="800" width="800">
+       <p>No restaurants found</p>
+     </div>
+
+  </div>
+
 </template>
 
 <script>
-import Strapi from 'strapi-sdk-javascript/build/main'
-const apiUrl = process.env.API_URL || 'http://localhost:1337'
-const strapi = new Strapi(apiUrl)
+// Import the restaurants query
+import restaurantsQuery from '~/apollo/queries/restaurant/restaurants'
 
 export default {
   data() {
     return {
+      // Initialize an empty restaurants variabkle
+      restaurants: [],
       query: ''
     }
   },
+  apollo: {
+    restaurants: {
+      prefetch: true,
+      query: restaurantsQuery
+    }
+  },
   computed: {
+    // Search system
     filteredList() {
       return this.restaurants.filter(restaurant => {
         return restaurant.name.toLowerCase().includes(this.query.toLowerCase())
       })
     },
-    restaurants() {
-      return this.$store.getters['restaurants/list']
-    }
-  },
-  async fetch({ store }) {
-    store.commit('restaurants/emptyList')
-    const response = await strapi.request('post', '/graphql', {
-      data: {
-        query: `query {
-            restaurants {
-              id
-              name
-              description
-              image {
-                url
-              }
-            }
-          }
-          `
-      }
-    })
-    response.data.restaurants.forEach(restaurant => {
-      restaurant.image.url = `${apiUrl}${restaurant.image.url}`
-      store.commit('restaurants/add', {
-        id: restaurant.id,
-        ...restaurant
-      })
-    })
   }
 }
 </script>
@@ -432,7 +473,40 @@ The template section defines the structure of the page. As you can see, some att
 
 In the script section, you imported your required components and node modules. The `fetch` function, which is verify specific to Nuxt, is called when the page is loading: the content is not displayed until this function is resolved.
 
-Well done!
+**GraphQL query 🤔**
+
+As you can see you are calling a `restaurantsQuery` GraphQL query with Apollo here:
+
+```js
+...
+apollo: {
+  restaurants: {
+    prefetch: true,
+    query: restaurantsQuery
+  }
+},
+...
+```
+
+Indeed you will create a folder containing your requests made to the Strapi API
+Let's write it!
+
+  - Create a `/client/apollo/queries/restaurant/restaurants.gql` and copy/paste the following code:
+
+```gql
+query Restaurants {
+  restaurants {
+    id
+    name
+    description
+    image {
+      url
+    }
+  }
+}
+```
+
+**Well done! You can now see your restaurants!**
 
 ## Create Dishes
 
@@ -482,130 +556,132 @@ Here is the final result:
 
 ### Display dishes
 
-Go back to the frontend code. The steps are pretty similar to the restaurants list.
+  - Create a file called `_id.vue` in the `/client/pages/restaurants` and copy/paste the following code:
 
-  - Create a file called `dishes.js` and copy/paste the following code:
-
-`store/dishes.js`
-
-```js
-export const state = () => ({
-  list: []
-})
-
-export const mutations = {
-  add(state, dish) {
-    state.list.push(dish)
-  },
-  emptyList(state) {
-    state.list = []
-  }
-}
-
-export const getters = {
-  list: state => {
-    return state.list
-  }
-}
-```
-
-  - Create a `restaurants` folder in `./pages` folder
-  - Create a file called `_id.vue` and copy/paste the following code:
-
-`./pages/restaurants/_id.vue`
+`/client/pages/restaurants/_id.vue`
 
 ```js
 <template>
-  <section class="container">
-    <div>
-      <h1 class="mt-2">Dishes</h1>
-      <div class="row">
-        <div class="col-md-8">
-          <div class="card-columns">
-            <div v-for="dish in dishes" :key="dish.id" class="card">
-              <img :src="dish.image.url" class="card-img-top" alt="Card image cap">
-              <div class="card-body">
-                <h5 class="card-title">{{ dish.name }}</h5>
-                <p class="card-text">{{ dish.description || 'No description provided.' }}</p>
-                <p class="card-text">${{ dish.price }}</p>
-                <button class="btn btn-primary">Add to cart</button>
-              </div>
+<div>
+
+  // Link to go back to the previous page
+  <a class="uk-button uk-button-primary uk-margin" @click="$router.go(-1)"><span uk-icon="arrow-left"></span> go back</a>
+
+  <client-only>
+  <div uk-grid>
+
+      // Left card displaying dishes
+      <div class="uk-width-1-3@m">
+        <div v-for="dish in restaurant.dishes" class="uk-margin">
+            <div class="uk-card uk-card-default">
+                <div class="uk-card-media-top">
+                    <img :src="'http://localhost:1337/' + dish.image.url" alt="" />
+                </div>
+                <div class="uk-card-body">
+                    <h3 class="uk-card-title">{{ dish.name }} <span class="uk-badge">{{ dish.price }}€</span></h3>
+                    <p>{{ dish.description }}</p>
+                </div>
+                <div class="uk-card-footer">
+                  // Doing nothing for the moment :)
+                  <button class="uk-button uk-button-primary">Add to cart</button>
+                </div>
             </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Cart</h5>
-            </div>
-          </div>
         </div>
       </div>
-    </div>
-  </section>
+
+      // Right card that will display your cart
+      <div class="uk-width-expand@m">
+      </div>
+
+  </div>
+
+  </client-only>
+</div>
 </template>
 
 <script>
-import Strapi from 'strapi-sdk-javascript/build/main'
-const apiUrl = process.env.API_URL || 'http://localhost:1337'
-const strapi = new Strapi(apiUrl)
+import restaurantQuery from '~/apollo/queries/restaurant/restaurant'
 
 export default {
-  computed: {
-    id() {
-      return this.$route.params.id
-    },
-    dishes() {
-      return this.$store.getters['dishes/list']
+  data() {
+    return {
+      restaurant: Object
     }
   },
-  async fetch({ store, params }) {
-    store.commit('dishes/emptyList')
-    const response = await strapi.request('post', '/graphql', {
-      data: {
-        query: `query {
-            restaurant(id: "${params.id}") {
-              id
-              name
-              dishes {
-                id
-                name
-                description
-                price
-                image {
-                  url
-                }
-              }
-            }
-          }
-          `
+  apollo: {
+    restaurant: {
+      prefetch: true,
+      query: restaurantQuery,
+      variables () {
+        return { id: this.$route.params.id }
       }
-    })
-
-    response.data.restaurant.dishes.forEach(dish => {
-      dish.image.url = `${apiUrl}${dish.image.url}`
-      store.commit('dishes/add', {
-        id: dish.id,
-        ...dish
-      })
-    })
+    }
   }
 }
 </script>
+
 ```
+You need to create a new `restaurantQuery` GraphQL query with Apollo in order to fetch data from each restaurant
+
+  - Create a `/client/apollo/queries/restaurant/restaurant.gql` and copy/paste the following code:
+
+```gql
+query Restaurant($id: ID!) {
+  restaurant(id: $id) {
+    id
+    name
+    dishes {
+      id
+      name
+      description
+      price
+      image {
+        url
+      }
+    }
+  }
+}
+```
+
+So you have two queries for your application:
+  - `restaurantsQuery` that fetch every restaurants from your Strapi API
+  - `restaurantQuery` that fetch data from one restaurant depending on the given id in the url. ex: `/restaurant/2`
 
 ![Dishes list](https://blog.strapi.io/content/images/2018/07/dishes.gif)
 
-The dishes page should be accessible from `http://localhost:3000/restaurants/1` where `1` is the id of the restaurant. Nuxt.js creates urls according to the name of the files located in `pages`.
+The dishes page should be accessible from `http://localhost:3000/restaurants/1` where `1` is the id of the restaurant. Nuxt.js creates urls according to the name of the files located in `/client/pages`.
 
 Nothing particular here: exactly like for the restaurants, you defined a template and then add the logic in the script section.
 
 ## Authentication
 
-At this point, you may have expected to get ready to order. But before that, you need to give the user the possibility to register and login to your app. No worries, Strapi comes to the rescue with its Users & Permissions plugin already installed in your project.
+At this point, you may have expected to get ready to order. But before that, you need to give the user the possibility to register and login to your app. No worries, Strapi comes to the rescue with its `Users & Permissions` plugin already installed in your project.
+
+To quicken your front-end development, you are going to install the [Strapi JavaScript SDK](https://github.com/strapi/strapi-sdk-javascript):
+
+`/client`
+
+```shell
+yarn add strapi-sdk-javascript
+# OR
+npm install strapi-sdk-javascript
+```
+
+  - Create a `/client/utils/Strapi.js` file and copy/paste the following:
+
+```js
+import Strapi from 'strapi-sdk-javascript/build/main'
+
+const apiUrl = process.env.API_URL || 'http://localhost:1337'
+const strapi = new Strapi(apiUrl)
+
+export default strapi;
+export { apiUrl }
+```
 
 ### Auth store
 
+For this tutorial, you will store `user` data in cookies.
 You have to install `js-cookie`:
 
   - Go into your `client` folder
@@ -617,15 +693,17 @@ yarn add js-cookie
 npm i js-cookie
 ```
 
-- Create a file called `auth.js` in the `store` folder and copy/paste the following code:
+- Create a file called `auth.js` in the `/client/store` folder and copy/paste the following code:
 
-`store/auth.js`
+`/client/store/auth.js`
 
 ```js
 import Cookies from 'js-cookie'
 
+// Defining an empty state
 export const state = () => {}
 
+// Create a mutation that set a user to your state and in a 'user' cookie
 export const mutations = {
   setUser(state, user) {
     state.user = user
@@ -647,61 +725,73 @@ You could have stored it in the local storage, but since Nuxt.js supports server
 
 ### Register
 
-  - Create a new file named `signup.vue` in the `pages` directory, and copy/past the following content:
+Let's create a register form in order to create a user!
 
-`pages/signup.vue`
+  - Create a new file `/client/pages/users/register.vue` and copy/paste the following content:
+
+`/client/pages/users/register.vue`
 
 ```js
 <template>
-  <section class="container">
-    <div class="col-md-6 offset-md-3 mt-3">
-      <form autocomplete="off" @submit.stop.prevent="handleSubmit">
-        <div class="form-group">
-          <label for="username">Username</label>
-          <b-form-input
-            id="username"
-            v-model="username"
-            type="text"
-            placeholder="Enter your username"
-            required/>
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <b-form-input
-            id="email"
-            v-model="email"
-            type="email"
-            placeholder="Enter your email"
-            required/>
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <b-form-input
-            id="password"
-            v-model="password"
-            label="password"
-            type="password"
-            class="form-control"
-            placeholder="Enter your password"
-            required/>
-        </div>
-        <button :disabled="loading" type="submit" class="btn btn-primary btn-block mt-3">Submit</button>
-        <p class="text-center mt-3">
-          Already have an account?
-          <router-link :to="{ name: 'signin'}" tag="a">
-            Login
-          </router-link>
-        </p>
-      </form>
-    </div>
-  </section>
+<div>
+
+  <div class="uk-child-width-1-2@m uk-grid">
+      <div>
+          // Nice image to make this app more beautiful
+          <div class="uk-card uk-card-default uk-card-small uk-card-body">
+            <img src="https://assets-ouch.icons8.com/preview/294/e25a0374-0657-45d5-98d9-2408473a744c.png" height="500" width="500" class="uk-align-center" alt="">
+          </div>
+      </div>
+      <div>
+          <div class="uk-card uk-card-default uk-card-large uk-card-body">
+
+              <form @submit.stop.prevent="handleSubmit">
+                  <fieldset class="uk-fieldset">
+
+                      <legend class="uk-legend">Register</legend>
+
+                      <div class="uk-margin">
+                        <label class="uk-form-label">Username</label>
+                        <input class="uk-input" v-model="username" type="text" placeholder="pbocuse">
+                      </div>
+
+                      <div class="uk-margin">
+                        <label class="uk-form-label" for="form-stacked-text">Email</label>
+                        <input class="uk-input" v-model="email" type="email" placeholder="paul.bocuse@gmail.com">
+                      </div>
+
+                      <div class="uk-margin">
+                        <label class="uk-form-label" for="form-stacked-text">Password</label>
+                        <input class="uk-input" v-model="password" type="password">
+                      </div>
+
+                      <div class="uk-margin">
+                        <button class="uk-button uk-button-primary uk-width-1-1" :disabled="loading" type="submit">Submit</button>
+                      </div>
+
+                      <div class="uk-margin">
+                        <p>
+                          Already have an account?
+                          <router-link :to="{ name: 'users-signin'}">
+                            Login
+                          </router-link>
+                        </p>
+                      </div>
+
+                  </fieldset>
+              </form>
+
+          </div>
+      </div>
+  </div>
+
+</div>
 </template>
 
 <script>
-import Strapi from 'strapi-sdk-javascript/build/main'
-const apiUrl = process.env.API_URL || 'http://localhost:1337'
-const strapi = new Strapi(apiUrl)
+// Import mapMutations in order to call mutations from your store
 import { mapMutations } from 'vuex'
+import strapi from '~/utils/Strapi'
 
 export default {
   data() {
@@ -713,6 +803,7 @@ export default {
     }
   },
   methods: {
+    // Method that will register your users
     async handleSubmit() {
       try {
         this.loading = true
@@ -722,34 +813,32 @@ export default {
           this.password
         )
         this.loading = false
+        // Call your setUser mutation from your auth.js store file
         this.setUser(response.user)
-        this.$router.push('/')
+        this.$router.go(-1)
       } catch (err) {
         this.loading = false
         alert(err.message || 'An error occurred.')
       }
     },
+    // Define all your needed mutations, here: auth/setUser
     ...mapMutations({
       setUser: 'auth/setUser'
     })
   }
 }
 </script>
-
 ```
 
-In this page, you insert a form which has three inputs: **username**, **email** and **address**. You also defined a method named `handleSubmit` which uses the Strapi SDK to register the user before redirecting them to the home page.
-
-  - Restart the client
-  - Create a new user from this new page: [http://localhost:3000/signup](http://localhost:3000/signup).
+In this page, you insert a form which has three inputs: **username**, **email** and **address**. You also defined a method named `handleSubmit` which uses the Strapi SDK to register the user before redirecting them to the previous page.
 
 ### Logout
 
 The user must be able to logout, ideally from a button in the header.
 
-  - Add a `logout` mutation and a `username` setter in the `auth` store:
+  - Add a `logout` mutation and a `username` getter in the `auth` store:
 
-`store/auth.js`
+`/client/store/auth.js`
 
 ```js
 import Cookies from 'js-cookie'
@@ -761,12 +850,14 @@ export const mutations = {
     state.user = user
     Cookies.set('user', user)
   },
+  // Mutation that you need to add
   logout(state) {
     state.user = null
     Cookies.set('user', null)
   }
 }
 
+// Define a getter in order to get your current username from your state
 export const getters = {
   username: state => {
     return state.user && state.user.username
@@ -776,39 +867,40 @@ export const getters = {
 
 - Modify the `Header.vue` to get something like this
 
-`components/Header.vue`
+`/client/components/Header.vue`
 
 ```js
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-      <router-link tag="a" class="navbar-brand" to="/" exact>Deliveroo clone</router-link>
-      <div class="collapse navbar-collapse justify-content-end">
-        <ul class="navbar-nav">
-          <li v-if="username">
-            <a href="#" class="nav-link">
-              Hello {{ username }}
-            </a>
-          </li>
-          <li v-if="username">
-            <a href="#" class="nav-link" @click="logout">
-              Logout
-            </a>
-          </li>
-          <li v-if="!username">
-            <router-link v-if="!username" tag="a" class="nav-link" to="/signin" exact>
-              Signin
-            </router-link>
-          </li>
-          <li v-if="!username">
-            <router-link v-if="!username" tag="a" class="nav-link" to="/signup" exact>
-              Signup
-            </router-link>
-          </li>
-        </ul>
+  <client-only>
+  <nav class="uk-navbar-container" uk-navbar>
+      <div class="uk-navbar-left">
+
+          <ul class="uk-navbar-nav">
+              <li class="uk-active"><router-link tag="a" class="navbar-brand" to="/" exact>Deliveroo clone</router-link></li>
+              <li><router-link tag="a" class="navbar-brand" to="/restaurants" exact>Restaurants</router-link></li>
+          </ul>
+
       </div>
-    </div>
+
+      <div class="uk-navbar-right">
+
+          // If you are logged in
+          <ul class="uk-navbar-nav" v-if="username">
+              <li><a href="#" class="uk-link-reset"><img src="https://png2.cleanpng.com/sh/a7adacc7226d2dc438dafb37913a8ab8/L0KzQYm3V8E2N5tqipH0aYP2gLBuTfVudZZ5ReZxZT3vdbj2Tf1wfppqRehyZHXyd7L0hb1xeppze9d8cz34frryigR1gV58Rdd2bXX3Pb3shB8udZD7gdc2NXK3coG9UMRibGJrfqI3Mkm0RoS7VMYyPWQ2TqY8M0m5R4GCUb5xdpg=/kisspng-emmet-the-lego-movie-videogame-princess-unikitty-w-emmet-lego-movie-5b4b0604ad1ff0.2916344615316433967091.png" class="uk-border-circle" height="40" width="40" alt="">{{ username }}</a></li>
+              <li><a href="#" @click="logout">Logout</a></li>
+          </ul>
+
+          // If you are not logged in
+          <ul class="uk-navbar-nav" v-else>
+              <li><a href="/users/register">Signup</a></li>
+              <li><a href="/users/signin">Signin</a></li>
+          </ul>
+
+      </div>
+
   </nav>
+</client-only>
+
 </template>
 
 <script>
@@ -816,11 +908,13 @@ import { mapMutations } from 'vuex'
 
 export default {
   computed: {
+    // Set your username thanks to your getter
     username() {
       return this.$store.getters['auth/username']
     }
   },
   methods: {
+    // Define your needed mutations, here: auth/logout
     ...mapMutations({
       logout: 'auth/logout'
     })
@@ -828,6 +922,7 @@ export default {
 }
 </script>
 ```
+
 Try to reload the page and you will see that no changes have been made: You still see the `signin` and `signup` links although you registered a user a few minutes ago. This happens because you did not use the `auth/setUser` mutation on the load page. Since Nuxt.js is rendered server side, you need to do a little trick using the `nuxtServerInit` action which is invoked when the Nuxt.js server starts:
 
   - Install `cookieparser`:
@@ -840,7 +935,7 @@ npm install cookieparser
 
 - Create an `index.js` file in the `store` folder and copy/paste the following code:
 
-`store/index.js`
+`/client/store/index.js`
 
 ```js
 import cookieparser from 'cookieparser'
@@ -858,56 +953,68 @@ export const actions = {
 }
 ```
 
+Perfect! You can register again to check if that works but you are going to create a sign in page right now.
+
 ### Login
 
   - Create a `signin.vue` in the `pages` folder and copy/paste the following code
 
-`pages/signin.vue`
+`/client/pages/users/signin.vue`
 
 ```js
 <template>
-  <section class="container">
-    <div class="col-md-6 offset-md-3 mt-3">
-      <form autocomplete="off" @submit.stop.prevent="handleSubmit">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <b-form-input
-            id="email"
-            v-model="email"
-            type="email"
-            autofocus="true"
-            placeholder="Enter your email"
-            required/>
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <b-form-input
-            id="password"
-            v-model="password"
-            label="password"
-            type="password"
-            class="form-control"
-            autofocus="true"
-            placeholder="Enter your password"
-            required/>
-        </div>
-        <button :disabled="loading" type="submit" class="btn btn-primary btn-block mt-3">Submit</button>
-        <p class="text-center mt-3">
-          No account yet
-          <router-link :to="{ name: 'signup'}" tag="a">
-            Register
-          </router-link>
-        </p>
-      </form>
-    </div>
-  </section>
+<div>
+
+  <div class="uk-child-width-1-2@m uk-grid">
+      <div>
+          <div class="uk-card uk-card-default uk-card-small uk-card-body">
+            <img src="https://assets-ouch.icons8.com/preview/457/0b338840-2e33-432e-a547-4d3e5acc960c.png" height="500" width="500" class="uk-align-center" alt="">
+          </div>
+      </div>
+      <div>
+          <div class="uk-card uk-card-default uk-card-large uk-card-body">
+
+              <form @submit.stop.prevent="handleSubmit">
+                  <fieldset class="uk-fieldset">
+
+                      <legend class="uk-legend">Sign in</legend>
+
+                      <div class="uk-margin">
+                        <label class="uk-form-label" for="form-stacked-text">Email</label>
+                        <input class="uk-input" v-model="email" type="email" placeholder="paul.bocuse@gmail.com">
+                      </div>
+
+                      <div class="uk-margin">
+                        <label class="uk-form-label" for="form-stacked-text">Password</label>
+                        <input class="uk-input" v-model="password" type="password">
+                      </div>
+
+                      <div class="uk-margin">
+                        <button class="uk-button uk-button-primary uk-width-1-1" :disabled="loading" type="submit">Submit</button>
+                      </div>
+
+                      <div class="uk-margin">
+                        <p>
+                          No account yet?
+                          <router-link :to="{ name: 'users-register'}">
+                            Register
+                          </router-link>
+                        </p>
+                      </div>
+
+                  </fieldset>
+              </form>
+
+          </div>
+      </div>
+  </div>
+
+</div>
 </template>
 
 <script>
-import Strapi from 'strapi-sdk-javascript/build/main'
-const apiUrl = process.env.API_URL || 'http://localhost:1337'
-const strapi = new Strapi(apiUrl)
 import { mapMutations } from 'vuex'
+import strapi from '~/utils/Strapi'
 
 export default {
   data() {
@@ -921,7 +1028,10 @@ export default {
     async handleSubmit() {
       try {
         this.loading = true
-        const response = await strapi.login(this.email, this.password)
+        const response = await strapi.login(
+          this.email,
+          this.password
+        )
         this.loading = false
         this.setUser(response.user)
         this.$router.go(-1)
@@ -943,14 +1053,15 @@ export default {
 ![Authentication](https://blog.strapi.io/content/images/2018/07/authentication.gif)
 
 That's it for the authentication!
+  - Reload your page and play with this new user system you just created!
 
 ## Shopping cart
 
 All of these dishes look so tasty! What if you could add some of them in a shopping cart?
 
-  - Create a new file named `cart.js` and copy/paste the following code:
+  - Create a new store named `cart.js` and copy/paste the following code:
 
-`store/cart.js`
+`./client/store/cart.js`
 
 ```js
 import Cookies from 'js-cookie'
@@ -1013,9 +1124,9 @@ export const getters = {
 ```
 To make sure the items stay in the cart even after page reload, you will are also use cookies. So you need to update the `nuxtInitServer` function:
 
-  - Update the `index.js` file to get the following:
+  - Update the `index.js` store to get the following:
 
-`store/index.js`
+`/client/store/index.js`
 
 ```js
 import cookieparser from 'cookieparser'
@@ -1036,72 +1147,137 @@ export const actions = {
 }
 ```
 
+Now you want to add the cart to your pages. To do so you are going to create a `Cart`component that will be used in your `restaurants/_id.vue` and your future `orders/checkout.vue`
+
   - Update the `_id.vue` file to get the following code:
 
-`pages/restaurants/_id.vue`
+`/client/pages/restaurants/_id.vue`
 
 ```js
 <template>
-  <section class="container">
-    <div>
-      <h1 class="mt-2">Dishes</h1>
-      <div class="row">
-        <div class="col-md-8">
-          <div class="cart-columns">
-            <div v-for="dish in dishes" :key="dish.id" class="card">
-              <img :src="dish.image.url" class="card-img-top">
-              <div class="card-body">
-                <h5 class="card-title">{{ dish.name }}</h5>
-                <p class="card-text">{{ dish.description || 'No description provided.' }}</p>
-                <p class="card-text">${{ dish.price }}</p>
-                <button class="btn btn-primary" @click="addToCart(dish)">Add to cart</button>
-              </div>
+<div>
+
+  <a class="uk-button uk-button-primary uk-margin" @click="$router.go(-1)"><span uk-icon="arrow-left"></span> go back</a>
+
+  <client-only>
+  <div uk-grid>
+      <div class="uk-width-1-3@m">
+
+        // Left card displaying dishes
+        <div v-for="dish in restaurant.dishes" class="uk-margin">
+            <div class="uk-card uk-card-default">
+                <div class="uk-card-media-top">
+                    <img :src="'http://localhost:1337/' + dish.image.url" alt="" />
+                </div>
+                <div class="uk-card-body">
+                    <h3 class="uk-card-title">{{ dish.name }} <span class="uk-badge">{{ dish.price }}€</span></h3>
+                    <p>{{ dish.description }}</p>
+                </div>
+                <div class="uk-card-footer">
+                  <button class="uk-button uk-button-primary" @click="addToCart(dish)">Add to cart</button>
+                </div>
             </div>
-          </div>
         </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Cart</h5>
-              <p class="card-text">{{ numberOfItems }} items selected:</p>
-              <ul>
-                <li v-for="dish in selectedDishes" :key="dish.id" class="card-text mb-2">
-                  Name: {{ dish.name }} (${{ dish.price }}) ({{ dish.quantity }})
-                  <button class="btn btn-sm btn-success" @click="addToCart(dish)">+</button>
-                  <button class="btn btn-sm btn-warning ml-2" @click="removeFromCart(dish)">-</button>
-                </li>
-              </ul>
-              <h5 class="card-text">
-                Total: ${{ price }}
-              </h5>
-              <p v-if="!selectedDishes.length">Please select some items.</p>
-              <button :disabled="!selectedDishes.length" class="btn btn-primary">Order</button>
-            </div>
-          </div>
-        </div>
+
       </div>
-    </div>
-  </section>
+
+
+      // Right card displaying you cart
+      <div class="uk-width-expand@m">
+          // Call a Cart component
+          <Cart />
+      </div>
+  </div>
+
+  </client-only>
+</div>
 </template>
 
 <script>
-import Strapi from 'strapi-sdk-javascript/build/main'
-const apiUrl = process.env.API_URL || 'http://localhost:1337'
-const strapi = new Strapi(apiUrl)
 import { mapMutations } from 'vuex'
+import Cart from '~/components/Cart.vue'
+import restaurantQuery from '~/apollo/queries/restaurant/restaurant'
 
 export default {
   data() {
     return {
-      complete: false
+      restaurant: Object
     }
+  },
+  apollo: {
+    restaurant: {
+      prefetch: true,
+      query: restaurantQuery,
+      variables () {
+        return { id: this.$route.params.id }
+      }
+    }
+  },
+  components: {
+    Cart
+  },
+  methods:{
+    ...mapMutations({
+      addToCart: 'cart/add',
+      removeFromCart: 'cart/remove'
+    }),
+  }
+}
+</script>
+```
+
+As you may see, you imported a `Cart` component. In fact you want to reuse this component in two pages: `restaurants/index.vue` and `orders/checkout.vue` that you'll create soon
+
+  - Create a `/client/components/Cart.vue` and copy/paste the following code:
+
+```js
+<template>
+<div class="uk-card uk-card-default uk-card-body uk-margin" uk-sticky="offset: 20; bottom: true">
+  <img src="https://assets-ouch.icons8.com/preview/125/6414b067-ba59-46ef-8693-4e190aa466c7.png" class="uk-align-center" height="250" width="250" alt="" />
+
+  <div v-if="price > 0">
+
+    <table class="uk-table uk-table-striped uk-table-small uk-table-responsive">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price (unit)</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="dish in selectedDishes">
+                <td class="uk-width-1-2">{{ dish.name }}</td>
+                <td class="uk-table-shrink">{{ dish.price }}€</td>
+                <td class="uk-table-shrink">{{ dish.quantity }}</td>
+                <td>
+                  <a class="uk-margin-left"><span class="uk-badge" @click="addToCart(dish)">+</span></a>
+                  <a><span class="uk-badge" style="background: #f0506e;" @click="removeFromCart(dish)">-</span></a>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+
+    <button class="uk-button uk-button-primary" name="button">Process to checkout ({{ price }}€)</button>
+  </div>
+
+</div>
+</template>
+
+<script>
+import { mapMutations } from 'vuex'
+
+export default {
+  methods:{
+    ...mapMutations({
+      addToCart: 'cart/add',
+      removeFromCart: 'cart/remove'
+    })
   },
   computed: {
     id() {
       return this.$route.params.id
-    },
-    dishes() {
-      return this.$store.getters['dishes/list']
     },
     selectedDishes() {
       return this.$store.getters['cart/items']
@@ -1112,43 +1288,6 @@ export default {
     numberOfItems() {
       return this.$store.getters['cart/numberOfItems']
     }
-  },
-  async fetch({ store, params }) {
-    store.commit('dishes/emptyList')
-    const response = await strapi.request('post', '/graphql', {
-      data: {
-        query: `query {
-            restaurant(id: "${params.id}") {
-              id
-              name
-              dishes {
-                id
-                name
-                description
-                price
-                image {
-                  url
-                }
-              }
-            }
-          }
-          `
-      }
-    })
-    response.data.restaurant.dishes.forEach(dish => {
-      dish.image.url = `${apiUrl}${dish.image.url}`
-      store.commit('dishes/add', {
-        id: dish.id,
-        ...dish
-      })
-    })
-  },
-  methods: {
-    ...mapMutations({
-      addToCart: 'cart/add',
-      removeFromCart: 'cart/remove',
-      emptyCart: 'cart/emptyList'
-    })
   }
 }
 </script>
@@ -1203,12 +1342,11 @@ In this section you will need Stripe API keys.
 
 If you have already used Stripe, you may know that the credit card information does not go through your backend server. Instead, the information di directly sent to the Stripe API (ideally using their SDK). Then, your frontend receives a token. The `id` of the token must be sent to your backend which will create the Stripe charge.
 
+  - Install the `stripe` package in your `server` folder
 
-  - Install the `stripe` package by running
+`/server`
 
 ```shell
-cd server
-
 yarn add stripe
 # OR
 npm install stripe
@@ -1216,14 +1354,14 @@ npm install stripe
 
 In order to integrate the Stripe logic, you need to update the `create` charge endpoint in your Strapi API.
 
-  - Update `./server/api/order/controllers/Order.js` and replace its content with:
+  - Update `/server/api/order/controllers/Order.js` and replace its content with:
 
 `./server/api/order/controllers/Order.js`
 
 ```js
 
 'use strict';
-const stripe = require('stripe')('sk_test_CbI52CqMj8Cv4bXf822VOGhu');
+const stripe = require('stripe')('YOU_STRIPE_API_KEY');
 
 module.exports = {
   create: async ctx => {
@@ -1268,11 +1406,15 @@ module.exports = {
 };
 ```
 
+Don't forget to replace `YOU_STRIPE_API_KEY` by your stripe API key
+
 **Note:** In a real-world example, the amount should be checked on the backend side and the list of dishes related to the command should be stored in a more specific Content Type called `orderDetail`.
 
   - Restart the Strapi server with `yarn develop` or `npm run devlelop`.
 
-  - Install the `vue-stripe-elements-plus` package in `client` folder to make it work:
+  - Install the `vue-stripe-elements-plus` package in your `client` folder to make it work:
+
+`/client`
 
 ```shell
 yarn add vue-stripe-elements-plus
@@ -1280,9 +1422,9 @@ yarn add vue-stripe-elements-plus
 npm i vue-stripe-elements-plus
 ```
 
-  - Add the Stripe script in the Nuxt.js config:
+  - Add the Stripe script in the `nuxt.config.js` file:
 
-`./nuxt.config.js`
+`/client/nuxt.config.js`
 
 ```js
 module.exports = {
@@ -1303,9 +1445,15 @@ module.exports = {
 
 ### Checkout page
 
-  In `pages/restaurants/_id.vue`, add the click handler `@click="goToCheckout"` to the Order button and add the `goToCheckout` method
+You are going to create a checkout page that will display your cart thanks to the `Cart` component and the Stripe form.
 
-  This method below has to be added in the `_id.vue` file
+  - In `/client/components/Cart.vue`, add the click handler `@click="goToCheckout"` to the Order button and add the `goToCheckout` method
+
+`/client/components/Cart.vue`
+
+```js
+<button class="uk-button uk-button-primary" @click="goToCheckout" name="button">Process to checkout ({{ price }}€)</button>
+```
 
 ```
 goToCheckout() {
@@ -1321,70 +1469,65 @@ goToCheckout() {
 ```
 You will get this result:
 
-`pages/restaurants/_id.vue`
+`./client/components/Cart.vue`
 
 ```js
 <template>
-  <section class="container">
-    <div>
-      <h1 class="mt-2">Dishes</h1>
-      <div class="row">
-        <div class="col-md-8">
-          <div class="cart-columns">
-            <div v-for="dish in dishes" :key="dish.id" class="card">
-              <img :src="dish.image.url" class="card-img-top">
-              <div class="card-body">
-                <h5 class="card-title">{{ dish.name }}</h5>
-                <p class="card-text">{{ dish.description || 'No description provided.' }}</p>
-                <p class="card-text">${{ dish.price }}</p>
-                <button class="btn btn-primary" @click="addToCart(dish)">Add to cart</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Card</h5>
-              <p class="card-text">{{ numberOfItems }} items selected:</p>
-              <ul>
-                <li v-for="dish in selectedDishes" :key="dish.id" class="card-text mb-2">
-                  Name: {{ dish.name }} (${{ dish.price }}) ({{ dish.quantity }})
-                  <button class="btn btn-sm btn-success" @click="addToCart(dish)">+</button>
-                  <button class="btn btn-sm btn-warning ml-2" @click="removeFromCart(dish)">-</button>
-                </li>
-              </ul>
-              <h5 class="card-text">
-                Total: ${{ price }}
-              </h5>
-              <p v-if="!selectedDishes.length">Please select some items.</p>
-              <button :disabled="!selectedDishes.length" @click="goToCheckout" class="btn btn-primary">Order</button>
-            </div>
-          </div>
-        </div>
-      </div>
+  <div class="uk-card uk-card-default uk-card-body uk-margin" uk-sticky="offset: 20; bottom: true">
+    <img src="https://assets-ouch.icons8.com/preview/125/6414b067-ba59-46ef-8693-4e190aa466c7.png" class="uk-align-center" height="250" width="250" alt="" />
+
+    <div v-if="price > 0">
+
+      <table class="uk-table uk-table-striped uk-table-small uk-table-responsive">
+          <thead>
+              <tr>
+                  <th>Name</th>
+                  <th>Price (unit)</th>
+                  <th>Quantity</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr v-for="dish in selectedDishes">
+                  <td class="uk-width-1-2">{{ dish.name }}</td>
+                  <td class="uk-table-shrink">{{ dish.price }}€</td>
+                  <td class="uk-table-shrink">{{ dish.quantity }}</td>
+                  <td>
+                    <a class="uk-margin-left"><span class="uk-badge" @click="addToCart(dish)">+</span></a>
+                    <a><span class="uk-badge" style="background: #f0506e;" @click="removeFromCart(dish)">-</span></a>
+                  </td>
+
+              </tr>
+          </tbody>
+      </table>
+
+      <button class="uk-button uk-button-primary" @click="goToCheckout" name="button">Process to checkout ({{ price }}€)</button>
     </div>
-  </section>
+
+  </div>
 </template>
 
 <script>
-import Strapi from 'strapi-sdk-javascript/build/main'
-const apiUrl = process.env.API_URL || 'http://localhost:1337'
-const strapi = new Strapi(apiUrl)
 import { mapMutations } from 'vuex'
 
 export default {
-  data() {
-    return {
-      complete: false
+  methods:{
+    ...mapMutations({
+      addToCart: 'cart/add',
+      removeFromCart: 'cart/remove'
+    }),
+    goToCheckout() {
+      // Redirect to signin page if not logged in.
+      const isConnected = this.$store.getters['auth/username']
+      if (!isConnected) {
+        this.$router.push('/users/signin')
+        return
+      }
+      this.$router.push('/orders/checkout')
     }
   },
   computed: {
     id() {
       return this.$route.params.id
-    },
-    dishes() {
-      return this.$store.getters['dishes/list']
     },
     selectedDishes() {
       return this.$store.getters['cart/items']
@@ -1395,167 +1538,94 @@ export default {
     numberOfItems() {
       return this.$store.getters['cart/numberOfItems']
     }
-  },
-  async fetch({ store, params }) {
-    store.commit('dishes/emptyList')
-    const response = await strapi.request('post', '/graphql', {
-      data: {
-        query: `query {
-            restaurant(id: "${params.id}") {
-              id
-              name
-              dishes {
-                id
-                name
-                description
-                price
-                image {
-                  url
-                }
-              }
-            }
-          }
-          `
-      }
-    })
-    response.data.restaurant.dishes.forEach(dish => {
-      dish.image.url = `${apiUrl}${dish.image.url}`
-      store.commit('dishes/add', {
-        id: dish.id,
-        ...dish
-      })
-    })
-  },
-  methods: {
-    ...mapMutations({
-      addToCart: 'cart/add',
-      removeFromCart: 'cart/remove',
-      emptyCart: 'cart/emptyList'
-    }),
-    goToCheckout() {
-      // Redirect to signin page if not logged in.
-      const isConnected = this.$store.getters['auth/username']
-      if (!isConnected) {
-        this.$router.push('/signin')
-        return
-      }
-      this.$router.push('/checkout')
-    },
   }
 }
 </script>
-
 ```
 
-  - Create the `checkout.vue` file and copy/paste the following code:
+  - Create the `/client/pages/orders/checkout.vue` file and copy/paste the following code:
 
-`pages/checkout.vue`
+`/client/pages/orders/checkout.vue`
 
 ```js
 <template>
-  <section class="container">
-    <div>
-      <h1 class="mt-2">Checkout</h1>
-      <div class="row">
-        <div class="col-md-6 offset-md-3 mt-3">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Cart</h5>
-              <p class="card-text">{{ numberOfItems }} items selected:</p>
-              <ul>
-                <li v-for="dish in selectedDishes" :key="dish.id" class="card-text mb-2">
-                  Name: {{ dish.name }} (${{ dish.price }}) ({{ dish.quantity }})
-                  <button class="btn btn-sm btn-success" @click="addToCart(dish)">+</button>
-                  <button class="btn btn-sm btn-warning ml-2" @click="removeFromCart(dish)">-</button>
-                </li>
-              </ul>
-              <h5 class="card-text">
-                Total: ${{ price }}
-              </h5>
-              <p v-if="!selectedDishes.length">Please select some items.</p>
-            </div>
+<div>
+
+  <a class="uk-button uk-button-primary uk-margin" @click="$router.go(-1)"><span uk-icon="arrow-left"></span> go back</a>
+
+  <client-only placeholder="Chargement...">
+
+    <div uk-grid>
+        <div class="uk-width-1-3@m">
+
+          <div class="uk-card uk-card-default uk-card-body uk-width-1-1@m">
+
+            <form @submit.stop.prevent="handleSubmit">
+                <fieldset class="uk-fieldset">
+
+                    <legend class="uk-legend">Checkout</legend>
+
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="form-stacked-text">Address</label>
+                        <input class="uk-input" v-model="address" type="text" placeholder="13 boulevard francis">
+                    </div>
+
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="form-stacked-text">City</label>
+                        <input class="uk-input" v-model="city" type="text" placeholder="San francisco">
+                    </div>
+
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="form-stacked-text">Postal code</label>
+                        <input class="uk-input" v-model="postalCode" type="text" placeholder="92000">
+                    </div>
+
+                    <div class="uk-margin">
+                      <label for="card">Card</label>
+                        <card
+                          ref="card-stripe"
+                          stripe="YOUR_PUBLIC_STRIPE_API_KEY"
+                          @change='complete = $event.complete'
+                        />
+
+                    </div>
+
+                    <div class="uk-margin">
+                    <button class="uk-button uk-button-primary" v-if="$route.path !== '/orders/checkout'" @click="goToCheckout" name="button">Proceed to checkout ({{ price }}€)</button>
+                    </div>
+
+                </fieldset>
+            </form>
           </div>
+
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 offset-md-3 mt-3">
-          <form autocomplete="off" @submit.stop.prevent="handleSubmit">
-            <div class="form-group">
-              <label for="address">Address</label>
-              <b-form-input
-                id="address"
-                v-model="address"
-                type="text"
-                placeholder="Enter your address"
-                required/>
-            </div>
-            <div class="form-group">
-              <label for="postalCode">Postal Code</label>
-              <b-form-input
-                id="postalCode"
-                v-model="postalCode"
-                type="text"
-                placeholder="Enter your postal code"
-                required/>
-            </div>
-            <div class="form-group">
-              <label for="city">City</label>
-              <b-form-input
-                id="city"
-                v-model="city"
-                type="text"
-                placeholder="Enter your city"
-                required/>
-            </div>
-            <div class="form-group">
-              <label for="card">Cart</label>
-              <card
-                class="form-control"
-                stripe="pk_test_4nobp9tCdjhXC4JPrmgqKnsk"
-              />
-            </div>
-            <button :disabled="loading" type="submit" class="btn btn-primary btn-block mt-3">Submit</button>
-          </form>
+        <div class="uk-width-expand@m">
+            <Cart />
         </div>
-      </div>
     </div>
-  </section>
+  </client-only>
+
+
+</div>
 </template>
 
 <script>
+import Cart from '~/components/Cart.vue'
 import { Card, createToken } from 'vue-stripe-elements-plus'
-import { mapMutations } from 'vuex'
-import Strapi from 'strapi-sdk-javascript/build/main'
-const apiUrl = process.env.API_URL || 'http://localhost:1337'
-const strapi = new Strapi(apiUrl)
+import strapi from '~/utils/Strapi'
 
 export default {
   components: {
-    Card
+    Card,
+    Cart
   },
   data() {
     return {
       address: '',
       postalCode: '',
       city: '',
+      complete: false,
       loading: false
-    }
-  },
-  computed: {
-    id() {
-      return this.$route.params.id
-    },
-    dishes() {
-      return this.$store.getters['dishes/list']
-    },
-    selectedDishes() {
-      return this.$store.getters['cart/items']
-    },
-    price() {
-      return this.$store.getters['cart/price']
-    },
-    numberOfItems() {
-      return this.$store.getters['cart/numberOfItems']
     }
   },
   methods: {
@@ -1570,7 +1640,6 @@ export default {
         this.loading = false
         return
       }
-
       try {
         await strapi.createEntry('orders', {
           amount: this.$store.getters['cart/price'],
@@ -1587,22 +1656,17 @@ export default {
         this.loading = false
         alert('An error occurred.')
       }
-    },
-    ...mapMutations({
-      addToCart: 'cart/add',
-      removeFromCart: 'cart/remove',
-      emptyCart: 'cart/emptyList'
-    })
+    }
   }
 }
 </script>
 ```
 
+Don't forget to replace `YOUR_PUBLIC_STRIPE_API_KEY` by your public stripe API key
+
 **Explanation 🕵️**
 
 In this page, you display a form to get user's address and debit card information. You use the [Stripe Elements](https://stripe.com/elements) system. When the form is submitted, you get a token from Stripe. Then, you create the order in your Strapi API.
-
-
 
 You are now able to let users submit their order.
 
