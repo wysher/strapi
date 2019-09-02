@@ -377,7 +377,7 @@ modules: [
 apollo: {
   clientConfigs: {
     default: {
-      httpEndpoint: 'http://localhost:1337/graphql'
+      httpEndpoint: process.env.GRAPHQL_URL || 'http://localhost:1337/graphql'
     }
   }
 },
@@ -462,7 +462,8 @@ export default {
     return {
       // Initialize an empty restaurants variabkle
       restaurants: [],
-      query: ''
+      query: '',
+      apiUrl: apiUrl
     }
   },
   apollo: {
@@ -629,7 +630,8 @@ import { apiUrl } from '~/utils/Strapi'
 export default {
   data() {
     return {
-      restaurant: Object
+      restaurant: Object,
+      apiUrl: apiUrl
     }
   },
   apollo: {
@@ -1205,7 +1207,8 @@ import { apiUrl } from '~/utils/Strapi'
 export default {
   data() {
     return {
-      restaurant: Object
+      restaurant: Object,
+      apiUrl: apiUrl
     }
   },
   apollo: {
@@ -1678,7 +1681,7 @@ Bon appétit! 🇫🇷
 
 ![Order](https://blog.strapi.io/content/images/2018/07/order-1.gif)
 
-## Deploy Backend on Heroku
+## Deploy Server on Heroku
 
 Init a git project and commit your files:
 
@@ -1708,7 +1711,7 @@ Visit the URL provided by Heroku and keep it for the next step.
 
 **Note:** You will have to redefine your permissions rules from the interface. This workflow will be [improved in the near future](https://github.com/strapi/strapi/issues/672).**
 
-## Deploy Frontend on Netlify
+## Deploy Client on Netlify
 
 Init a git project and commit your files:
 
@@ -1723,12 +1726,34 @@ git push -u origin master
 
 Then:
 
+- Add a `API_URL` variable in your `nuxt.config.js` file
+- Add a `GRAPHQL_URL` variable in your `nuxt.config.js` file
+
+```js
+...
+env: {
+  API_URL: "YOUR_STRAPI_PRODUCTION_URL",
+  GRAPHQL_URL: "YOUR_STRAPI_PRODUCTION_GRAPHQL_URL"
+},
+...
+```
+
  - Signup to [Netlify](https://www.netlify.com).
  - Create a new site.
  - Select your repository.
  - Add the build command: `npm run generate`.
  - Add the publish directory: `dist`.
- - Add the Strapi API URL as environment variable: `API_URL` with the value of the Heroku project url.
+ - Add the API_URL as environment variable: `API_URL` with the value of the Heroku project url.
+ - Add the GRAPHQL_URL as environment variable: `GRAPHQL_URL` with the value of the Heroku project url.
+
+```js
+...
+env: {
+  API_URL: "YOUR_STRAPI_PRODUCTION_URL",
+  GRAPHQL_URL: "YOUR_STRAPI_PRODUCTION_GRAPHQL_URL"
+},
+...
+```
 
 ![Netlify setup](https://blog.strapi.io/content/images/2018/07/Screen-Shot-2018-07-01-at-19.48.24.png)
 
