@@ -384,6 +384,28 @@ apollo: {
 ...
 ```
 
+To quicken your front-end development, you are going to install the [Strapi JavaScript SDK](https://github.com/strapi/strapi-sdk-javascript):
+
+`/client`
+
+```shell
+yarn add strapi-sdk-javascript
+# OR
+npm install strapi-sdk-javascript
+```
+
+  - Create a `/client/utils/Strapi.js` file and copy/paste the following:
+
+```js
+import Strapi from 'strapi-sdk-javascript/build/main'
+
+const apiUrl = process.env.API_URL || 'http://localhost:1337'
+const strapi = new Strapi(apiUrl)
+
+export default strapi;
+export { apiUrl }
+```
+
 ### Display restaurants
 
 It looks you are going to the right direction. What if you would display these restaurants in your Nuxt.js app?
@@ -406,7 +428,7 @@ You want to be organized, that's why we are going to put the pages in their resp
       // Restaurant cards
       <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@m uk-margin" v-for="restaurant in filteredList" uk-grid>
           <div class="uk-card-media-left uk-cover-container">
-              <img :src="'http://localhost:1337/' + restaurant.image.url" alt="" uk-cover>
+              <img :src="apiUrl + restaurant.image.url" alt="" uk-cover>
               <canvas width="600" height="400"></canvas>
           </div>
           <div>
@@ -433,6 +455,7 @@ You want to be organized, that's why we are going to put the pages in their resp
 <script>
 // Import the restaurants query
 import restaurantsQuery from '~/apollo/queries/restaurant/restaurants'
+import { apiUrl } from '~/utils/Strapi'
 
 export default {
   data() {
@@ -575,7 +598,7 @@ Here is the final result:
         <div v-for="dish in restaurant.dishes" class="uk-margin">
             <div class="uk-card uk-card-default">
                 <div class="uk-card-media-top">
-                    <img :src="'http://localhost:1337/' + dish.image.url" alt="" />
+                    <img :src="apiUrl + dish.image.url" alt="" />
                 </div>
                 <div class="uk-card-body">
                     <h3 class="uk-card-title">{{ dish.name }} <span class="uk-badge">{{ dish.price }}€</span></h3>
@@ -601,6 +624,7 @@ Here is the final result:
 
 <script>
 import restaurantQuery from '~/apollo/queries/restaurant/restaurant'
+import { apiUrl } from '~/utils/Strapi'
 
 export default {
   data() {
@@ -657,27 +681,6 @@ Nothing particular here: exactly like for the restaurants, you defined a templat
 
 At this point, you may have expected to get ready to order. But before that, you need to give the user the possibility to register and login to your app. No worries, Strapi comes to the rescue with its `Users & Permissions` plugin already installed in your project.
 
-To quicken your front-end development, you are going to install the [Strapi JavaScript SDK](https://github.com/strapi/strapi-sdk-javascript):
-
-`/client`
-
-```shell
-yarn add strapi-sdk-javascript
-# OR
-npm install strapi-sdk-javascript
-```
-
-  - Create a `/client/utils/Strapi.js` file and copy/paste the following:
-
-```js
-import Strapi from 'strapi-sdk-javascript/build/main'
-
-const apiUrl = process.env.API_URL || 'http://localhost:1337'
-const strapi = new Strapi(apiUrl)
-
-export default strapi;
-export { apiUrl }
-```
 
 ### Auth store
 
@@ -1167,7 +1170,7 @@ Now you want to add the cart to your pages. To do so you are going to create a `
         <div v-for="dish in restaurant.dishes" class="uk-margin">
             <div class="uk-card uk-card-default">
                 <div class="uk-card-media-top">
-                    <img :src="'http://localhost:1337/' + dish.image.url" alt="" />
+                    <img :src="apiUrl + dish.image.url" alt="" />
                 </div>
                 <div class="uk-card-body">
                     <h3 class="uk-card-title">{{ dish.name }} <span class="uk-badge">{{ dish.price }}€</span></h3>
@@ -1197,6 +1200,7 @@ Now you want to add the cart to your pages. To do so you are going to create a `
 import { mapMutations } from 'vuex'
 import Cart from '~/components/Cart.vue'
 import restaurantQuery from '~/apollo/queries/restaurant/restaurant'
+import { apiUrl } from '~/utils/Strapi'
 
 export default {
   data() {
