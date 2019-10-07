@@ -3,6 +3,7 @@
 const _ = require('lodash');
 
 const requireConnector = require('./require-connector');
+const { createQuery } = require('./queries');
 
 class DatabaseManager {
   constructor(strapi) {
@@ -53,57 +54,16 @@ class DatabaseManager {
       throw new Error(`The model ${entity} can't be found.`);
     }
 
-    const { uid } = model;
-
-    if (this.queries.has(uid)) {
-      return this.queries.get(uid);
+    if (this.queries.has(model.uid)) {
+      return this.queries.get(model.uid);
     }
 
-    const connector = model.orm;
-
-    if (!connector) {
-      throw new Error(
-        `Impossible to determine the ORM to use for the model ${entity}.`
-      );
-    }
-
-    const query = this.connectors
-      .get(connector)
+    const connectorQuery = this.connectors
+      .get(model.orm)
       .queries({ model, modelKey: normalizedName, strapi });
 
-    Object.assign(query, {
-      orm: connector,
-      primaryKey: model.primaryKey,
-      associations: model.associations,
-    });
-
-    // custom queries made easy
-    Object.assign(query, {
-      get model() {
-        return model;
-      },
-      custom(mapping) {
-        if (typeof mapping === 'function') {
-          return mapping.bind(query, { model, modelKey: normalizedName });
-        }
-
-        if (!mapping[connector]) {
-          throw new Error(`Missing mapping for orm ${connector}`);
-        }
-
-        if (typeof mapping[connector] !== 'function') {
-          throw new Error(
-            `Custom queries must be functions received ${typeof mapping[
-              connector
-            ]}`
-          );
-        }
-
-        return mapping[connector].call(query, { model, normalizedName });
-      },
-    });
-
-    this.queries.set(uid, query);
+    const query = createQuery({ connectorQuery, model });
+    this.queries.set(model.uid, query);
     return query;
   }
 
