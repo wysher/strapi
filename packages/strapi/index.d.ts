@@ -1,9 +1,9 @@
-import { DatabaseManager, ModelQuery } from 'strapi-dbal';
+import { DatabaseManager, Repository } from 'strapi-dbal';
 
-class Strapi {
+interface Strapi {
   db: DatabaseManager;
 
-  query(model: string, plugin: string): ModelQuery;
+  query(model: string, plugin: string): Repository;
 }
 
 export default function createStrapi(opts: any): Strapi;

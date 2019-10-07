@@ -1,4 +1,4 @@
-export function initializeDatabase(strapi: any): Promise<DatabaseManager>;
+export function createDatabaseManager(strapi: any): Promise<DatabaseManager>;
 
 interface ConnectionInfo {
   name: string;
@@ -7,17 +7,21 @@ interface ConnectionInfo {
 export class DatabaseManager {
   connections: Array<ConnectionInfo>;
 
-  initialize(): Promise<void>;
-  query(model: string, plugin: string): ModelQuery;
+  initialize(): Promise<DatabaseManager>;
+  query(model: string, plugin: string): Repository;
+  getModel(model: string, plugin: string): Model;
 }
 
-export interface ModelQuery {
+class Model {}
+
+export class Repository {
+  model: Model;
   find(params: object): Promise<Array<ModelValue>>;
   findOne(params: object): Promise<ModelValue>;
-  count(params: object): Promise<number>;
   create(input: object): Promise<ModelValue>;
   update(params: object, input: object): Promise<ModelValue>;
   delete(params: object): Promise<ModelValue | Array<ModelValue>>;
+  count(params: object): Promise<number>;
   search(params: object): Promise<Array<ModelValue>>;
   countSearch(params: object): Promise<number>;
 }

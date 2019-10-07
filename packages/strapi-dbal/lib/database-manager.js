@@ -4,18 +4,6 @@ const _ = require('lodash');
 
 const requireConnector = require('./require-connector');
 
-function findModel(name, plugin) {
-  if (plugin === 'admin') {
-    return _.get(strapi.admin, ['models', name]);
-  }
-
-  return (
-    _.get(strapi.plugins, [plugin, 'models', name]) ||
-    _.get(strapi, ['models', name]) ||
-    _.get(strapi, ['groups', name])
-  );
-}
-
 class DatabaseManager {
   constructor(strapi) {
     this.strapi = strapi;
@@ -48,6 +36,8 @@ class DatabaseManager {
 
       await connector.initialize();
     }
+
+    return this;
   }
 
   query(entity, plugin) {
@@ -57,7 +47,7 @@ class DatabaseManager {
 
     const normalizedName = entity.toLowerCase();
 
-    const model = findModel(normalizedName, plugin);
+    const model = this.getModel(normalizedName, plugin);
 
     if (!model) {
       throw new Error(`The model ${entity} can't be found.`);
@@ -115,6 +105,20 @@ class DatabaseManager {
 
     this.queries.set(uid, query);
     return query;
+  }
+
+  getModel(name, plugin) {
+    const key = _.toLower(name);
+
+    if (plugin === 'admin') {
+      return _.get(strapi.admin, ['models', key]);
+    }
+
+    return (
+      _.get(strapi.plugins, [plugin, 'models', key]) ||
+      _.get(strapi, ['models', key]) ||
+      _.get(strapi, ['groups', key])
+    );
   }
 }
 
