@@ -44,33 +44,23 @@ class Query {
   }
 
   async find(...args) {
-    const result = this.connectorQuery.find(...args);
-
-    return result;
+    return this.connectorQuery.find(...args);
   }
 
   async findOne(...args) {
-    const result = this.connectorQuery.findOne(...args);
-
-    return result;
+    return this.connectorQuery.findOne(...args);
   }
 
   async create(...args) {
-    const result = this.connectorQuery.create(...args);
-
-    return result;
+    return this.connectorQuery.create(...args);
   }
 
   async update(...args) {
-    const result = this.connectorQuery.update(...args);
-
-    return result;
+    return this.connectorQuery.update(...args);
   }
 
   async delete(...args) {
-    const result = this.connectorQuery.delete(...args);
-
-    return result;
+    return this.connectorQuery.delete(...args);
   }
 
   async count(...args) {
