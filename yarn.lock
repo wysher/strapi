@@ -4049,7 +4049,7 @@ bonjour@^3.5.0:
 
 bookshelf@^1.0.1:
   version "1.0.1"
-  resolved "http://localhost:4873/bookshelf/-/bookshelf-1.0.1.tgz#0671b28d6bfb7b575633f621c380b26a3ce80ca0"
+  resolved "https://registry.yarnpkg.com/bookshelf/-/bookshelf-1.0.1.tgz#0671b28d6bfb7b575633f621c380b26a3ce80ca0"
   integrity sha512-x3Pk60r4EzQ+ZJElfT20cWUFb9HA/7B4IBAQjlMpokuteDxwiAnAUi4ZJtKwcDHKvII4OfebzbzkQBLv5E/djg==
   dependencies:
     bluebird "^3.5.5"
