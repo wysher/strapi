@@ -16,7 +16,7 @@ module.exports = ({ scope, client }) => {
     case 'mysql':
       return {
         'strapi-connector-bookshelf': scope.strapiVersion,
-        knex: 'latest',
+        knex: '<0.20.0',
         [sqlClientModule[client]]: 'latest',
       };
     case 'mongo':
